@@ -1,4 +1,6 @@
+import { sendToBackground } from '@plasmohq/messaging'
 import { Component } from 'react'
+import { ISaveSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { IRule } from '~utils/highlight'
 import { ISite } from '~utils/site'
 
@@ -60,7 +62,16 @@ function RuleEditor({
 export function SiteEditor({site}: {site: ISite}) {
   site = deepcopy(site) // replicate site data
 
-  function save() {}
+  async function save() {
+
+    await sendToBackground<ISaveSiteRequest, ISiteResponseData>({
+      name: 'site',
+      body: {
+        action: 'save',
+        site
+      }
+    })
+  }
 
   return (
     <form onSubmit={save}>
@@ -73,8 +84,9 @@ export function SiteEditor({site}: {site: ISite}) {
               onChange={(value) => site.uri_pattern}
             />
           </p>
-          {site.rules.map((rule) => (
+          {site.rules.map((rule, index) => (
             <RuleEditor
+              key={index}
               rule={rule}
               onChange={(value) => Object.assign(rule, value)}
             />
