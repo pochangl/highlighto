@@ -1,30 +1,30 @@
 import type { PlasmoCSConfig } from 'plasmo'
 
+import { sendToBackground } from '@plasmohq/messaging'
+
+import { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { highlight } from '~utils/highlight'
-import { findSite, type ISite } from '~utils/site'
 
 export const config: PlasmoCSConfig = {
   matches: ['<all_urls>'],
   run_at: 'document_idle'
 }
 
-const sites: ISite[] = [
-  {
-    uri_pattern: 'https://docs.plasmo.com',
-    rules: [
-      {
-        pattern: 'Welcome',
-        backgroundColor: 'FF0000'
-      }
-    ]
-  }
-]
-
-const site = findSite(window.location.href, sites)
-
-if (site !== null) {
-  document.body.innerHTML = highlight({
-    html: document.body.innerHTML,
-    rules: site.rules
+async function update() {
+  const response = await sendToBackground<IGetSiteRequest, ISiteResponseData>({
+    name: 'site',
+    body: {
+      action: 'get',
+      uri: window.location.href
+    }
   })
+  const site = response.site
+  if (site !== null) {
+    document.body.innerHTML = highlight({
+      html: document.body.innerHTML,
+      rules: site.rules
+    })
+  }
 }
+
+update()
