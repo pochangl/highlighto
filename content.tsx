@@ -6,7 +6,7 @@ import { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { highlight } from '~utils/highlight'
 
 export const config: PlasmoCSConfig = {
-  matches: ['<all_urls>'],
+  matches: ['https?://.*'],
   run_at: 'document_idle'
 }
 
