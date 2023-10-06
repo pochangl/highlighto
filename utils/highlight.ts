@@ -3,10 +3,6 @@ export interface IRule {
   pattern: string
 }
 
-export interface IHighlight {
-  urlPattern: string
-}
-
 export function highlight(options: { html: string; rules: IRule[] }) {
   let html = options.html
   let regex = new RegExp('(' + options.rules.map((rule) => rule.pattern).join('|') + ')', 'g')
