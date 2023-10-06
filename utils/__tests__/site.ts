@@ -8,8 +8,7 @@ describe('findSites', () => {
       uri_pattern: 'http://example.com',
       rules: []
     }
-    const sites: ISite[] = [site]
-    const found = findSite('http://example.com', sites)
+    const found = findSite('http://example.com', [site])
     expect(found).toBe(site)
   })
   test('not found', () => {
@@ -17,8 +16,7 @@ describe('findSites', () => {
       uri_pattern: 'http://example.com1',
       rules: []
     }
-    const sites: ISite[] = [site]
-    const found = findSite('http://example.com', sites)
+    const found = findSite('http://example.com', [site])
     expect(found).toBeNull()
   })
   test('prefix', () => {
@@ -26,8 +24,7 @@ describe('findSites', () => {
       uri_pattern: 'http://example.com',
       rules: []
     }
-    const sites: ISite[] = [site]
-    const found = findSite('http://example.com/path', sites)
+    const found = findSite('http://example.com/path', [site])
     expect(found).toBe(site)
   })
   test('regex', () => {
