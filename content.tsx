@@ -1,8 +1,7 @@
 import type { PlasmoCSConfig } from 'plasmo'
 
 import { highlight } from '~utils/highlight'
-import { findSite } from '~utils/site'
-import type { ISite } from '~utils/site'
+import { findSite, type ISite } from '~utils/site'
 
 export const config: PlasmoCSConfig = {
   matches: ['<all_urls>'],
