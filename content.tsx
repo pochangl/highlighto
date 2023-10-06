@@ -15,7 +15,7 @@ const sites: ISite[] = [
     rules: [
       {
         pattern: 'Welcome',
-        color: 'FF0000'
+        backgroundColor: 'FF0000'
       }
     ]
   }

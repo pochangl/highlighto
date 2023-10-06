@@ -9,7 +9,7 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'a', color: '112233' }]
+          rules: [{ pattern: 'a', backgroundColor: '112233' }]
         })
       ).toEqual(
         '<p><span class="_highlighto" style="background-color: #112233">a</span> b c</p>'
@@ -21,7 +21,7 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'b', color: '112233' }]
+          rules: [{ pattern: 'b', backgroundColor: '112233' }]
         })
       ).toEqual(
         '<p>a <span class="_highlighto" style="background-color: #112233">b</span> c</p>'
@@ -33,7 +33,7 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'c', color: '112233' }]
+          rules: [{ pattern: 'c', backgroundColor: '112233' }]
         })
       ).toEqual(
         '<p>a b <span class="_highlighto" style="background-color: #112233">c</span></p>'
@@ -45,7 +45,7 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'b', color: '112233' }]
+          rules: [{ pattern: 'b', backgroundColor: '112233' }]
         })
       ).toEqual(
         '<b>a <span class="_highlighto" style="background-color: #112233">b</span> c</b>'
@@ -56,7 +56,7 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'b', color: '112233' }]
+          rules: [{ pattern: 'b', backgroundColor: '112233' }]
         })
       ).toEqual(
         '<p b="b">a <span class="_highlighto" style="background-color: #112233">b</span> c</p>'
@@ -69,8 +69,8 @@ describe('highlight function', () => {
       highlight({
         html: input,
         rules: [
-          { pattern: 'a', color: '112233' },
-          { pattern: 'b', color: '445566' }
+          { pattern: 'a', backgroundColor: '112233' },
+          { pattern: 'b', backgroundColor: '445566' }
         ]
       })
     ).toEqual(
