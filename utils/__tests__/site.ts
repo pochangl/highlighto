@@ -37,4 +37,19 @@ describe('findSites', () => {
     const not_found = findSite('http://example.com/1a/', [site])
     expect(not_found).toBeNull()
   })
+  test('multiple sites', () => {
+    const site1: ISite = {
+      uri_pattern: 'http://example1.com',
+      rules: []
+    }
+    const site2: ISite = {
+      uri_pattern: 'http://example2.com',
+      rules: []
+    }
+    const sites = [site1, site2]
+    const found1 = findSite('http://example1.com', sites)
+    expect(found1).toBe(site1)
+    const found2 = findSite('http://example2.com', sites)
+    expect(found2).toBe(site2)
+  })
 })
