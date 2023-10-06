@@ -1,29 +1,57 @@
-import { useState } from "react"
+import { Component } from 'react'
 
-function IndexPopup() {
-  const [data, setData] = useState("")
+import { sendToBackground } from '@plasmohq/messaging'
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 16
-      }}>
-      <h2>
-        Welcome to your
-        <a href="https://www.plasmo.com" target="_blank">
-          {" "}
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
-    </div>
-  )
+import { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
+import { SiteEditor } from '~components/site-editor'
+import { ISite } from '~utils/site'
+
+function getActiveTab() {
+  return new Promise<chrome.tabs.Tab>((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      var activeTab = tabs[0]
+      if (!activeTab) {
+        reject()
+      } else {
+        resolve(activeTab)
+      }
+    })
+  })
 }
 
+class Popup extends Component<{}, { site: ISite | null }> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      site: null
+    }
+    this.getSite()
+  }
+
+  async getSite() {
+    const tab = await getActiveTab()
+    const resp = await sendToBackground<IGetSiteRequest, ISiteResponseData>({
+      name: 'site',
+      body: {
+        action: 'get',
+        uri: tab.url
+      }
+    })
+    this.setState({
+      site: resp.site
+    })
+  }
+
+  render() {
+    if (this.state.site) {
+      return <SiteEditor site={this.state.site} />
+    } else {
+      return <div />
+    }
+  }
+}
+
+function IndexPopup() {
+  return <Popup />
+}
 export default IndexPopup
