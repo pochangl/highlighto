@@ -9,10 +9,11 @@ export interface IHighlight {
 
 export function highlight(options: { html: string; rules: IRule[] }) {
   let html = options.html
-  for (const pattern of options.rules) {
-    html = html.replace(pattern.pattern, function (match) {
-      return `<span class="_highlighto" style="background-color: #${pattern.color}">${match}</span>`
-    })
-  }
+  let regex = new RegExp('(' + options.rules.map((rule) => rule.pattern).join('|') + ')', 'g')
+  let map = Object.fromEntries(new Map(options.rules.map((rule) => [rule.pattern, rule.color])))
+  html = html.replace(regex, function (match) {
+    let color = map[match]
+    return `<span class="_highlighto" style="background-color: #${color}">${match}</span>`
+  })
   return html
 }
