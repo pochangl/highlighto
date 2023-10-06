@@ -1,3 +1,4 @@
+import { Component } from 'react'
 import { IRule } from '~utils/highlight'
 import { ISite } from '~utils/site'
 
@@ -5,16 +6,24 @@ function deepcopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj))
 }
 
-function TextField({
-  value,
-  onChange
-}: {
+class TextField extends Component<{
   value: string
   onChange: (value: string) => void
-}) {
-  return (
-    <input value={value} onChange={(event) => onChange(event.target.value)} />
-  )
+}, {text: string}> {
+  constructor(props) {
+    super(props);
+    this.state = {text: props.value}
+  }
+
+  render() {
+    return <input value={this.state.text} onChange={(event) => {
+      const value = event.target.value
+      this.setState({
+        text: value
+      })
+      this.props.onChange(value)
+    }} />
+  }
 }
 
 function RuleEditor({
@@ -38,7 +47,7 @@ function RuleEditor({
       />
       &nbsp; Color:&nbsp;
       <TextField
-        value={rule.pattern}
+        value={rule.backgroundColor}
         onChange={(value) => {
           rule.backgroundColor = value
           onChange(rule)
