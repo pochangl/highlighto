@@ -1,7 +1,13 @@
-import { text } from "stream/consumers"
-import { describe, expect, test } from "@jest/globals"
+import { text } from "stream/consumers";
+import { describe, expect, test } from "@jest/globals";
 
-import { highlight } from "~/utils/highlight"
+
+
+import { highlight } from "~/utils/highlight";
+
+
+
+
 
 describe("highlight function", () => {
   describe("single pattern", () => {
@@ -40,5 +46,19 @@ describe("highlight function", () => {
         '<p>a b <span class="_highlighto" style="background-color: #112233">c</span></p>'
       )
     })
+  })
+  test("multiple patterns", () => {
+    const input = "<p>a b c</p>"
+      expect(
+        highlight({
+          html: input,
+          rules: [
+            { pattern: "a", color: "112233" },
+            { pattern: "b", color: "445566" }
+          ]
+        })
+      ).toEqual(
+        '<p><span class="_highlighto" style="background-color: #112233">a</span> <span class="_highlighto" style="background-color: #445566">b</span> c</p>'
+      )
   })
 })
