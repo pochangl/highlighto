@@ -46,6 +46,29 @@ describe("highlight function", () => {
         '<p>a b <span class="_highlighto" style="background-color: #112233">c</span></p>'
       )
     })
+
+    test('prevent replace tag', () => {
+      const input = "<b>a b c</b>"
+      expect(
+        highlight({
+          html: input,
+          rules: [{ pattern: "b", color: "112233" }]
+        })
+      ).toEqual(
+        '<b>a <span class="_highlighto" style="background-color: #112233">b</span> c</b>'
+      )
+    })
+    test("prevent replace attribute", () => {
+      const input = "<p b='b'>a b c</[]>"
+      expect(
+        highlight({
+          html: input,
+          rules: [{ pattern: "b", color: "112233" }]
+        })
+      ).toEqual(
+        '<p b="b">a <span class="_highlighto" style="background-color: #112233">b</span> c</p>'
+      )
+    })
   })
   test("multiple patterns", () => {
     const input = "<p>a b c</p>"
