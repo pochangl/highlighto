@@ -28,3 +28,9 @@ async function update() {
 }
 
 update()
+
+const Content = () => {
+  return <div style={{ display: 'hidden' }} />
+}
+
+export default Content
