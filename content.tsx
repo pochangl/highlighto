@@ -2,7 +2,7 @@ import type { PlasmoCSConfig } from 'plasmo'
 
 import { sendToBackground } from '@plasmohq/messaging'
 
-import { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
+import type { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { highlight } from '~utils/highlight'
 
 export const config: PlasmoCSConfig = {

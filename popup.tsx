@@ -2,9 +2,9 @@ import { Component } from 'react'
 
 import { sendToBackground } from '@plasmohq/messaging'
 
-import { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
+import type { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { SiteEditor } from '~components/site-editor'
-import { ISite } from '~utils/site'
+import type { ISite } from '~utils/site'
 
 function getActiveTab() {
   return new Promise<chrome.tabs.Tab>((resolve, reject) => {
