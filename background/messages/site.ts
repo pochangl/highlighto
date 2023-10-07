@@ -31,10 +31,6 @@ export interface ISiteResponseData {
   site?: ISite
 }
 
-function getSite(pattern: string, sites: ISites) {
-  return sites[pattern] || null
-}
-
 const handler: PlasmoMessaging.MessageHandler = async (
   req: PlasmoMessaging.Request<string, IGetSiteRequest | ISaveSiteRequest>,
   res: PlasmoMessaging.Response<ISiteResponseData>
