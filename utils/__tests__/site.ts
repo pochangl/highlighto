@@ -68,8 +68,54 @@ describe('findSites', () => {
 
 describe('overwriteSite function', () => {
   describe('rewrite existed record', () => {
+    test('test rewrite', () => {
+      // test rewrite rules
+      const new_site = {
+        id: 1,
+        uri_pattern: 'http://example.com',
+        rules: [{ pattern: 'a', backgroundColor: '1' }]
+      }
+      const sites = {
+        'http://example.com': {
+          id: 1,
+          uri_pattern: 'http://example.com',
+          rules: []
+        }
+      }
+      overwriteSite(new_site, sites)
+      expect(sites).toEqual({
+        'http://example.com': {
+          id: 1,
+          uri_pattern: 'http://example.com',
+          rules: [{ pattern: 'a', backgroundColor: '1' }]
+        }
+      })
+    })
     test('single record 1', () => {
       // simple case with only one record in sites
+      const new_site = {
+        id: 1,
+        uri_pattern: 'http://example2.com',
+        rules: []
+      }
+      const sites = {
+        'http://example1.com': {
+          id: 1,
+          uri_pattern: 'http://example1.com',
+          rules: []
+        }
+      }
+      overwriteSite(new_site, sites)
+      expect(sites).toEqual({
+        'http://example2.com': {
+          id: 1,
+          uri_pattern: 'http://example2.com',
+          rules: []
+        }
+      })
+    })
+    test('single record 2', () => {
+      // simple case with multiple record in sites
       const site = {
         id: 1,
         uri_pattern: 'http://example1.com',
@@ -80,20 +126,95 @@ describe('overwriteSite function', () => {
         uri_pattern: 'http://example2.com',
         rules: []
       }
-      const sites = { [site.uri_pattern]: site }
-      overwriteSite(new_site, sites)
-      expect(sites).toEqual({
-        'http://example2.com': {
+      const sites = {
+        'http://example1.com': {
           id: 1,
+          uri_pattern: 'http://example1.com',
+          rules: []
+        },
+        'http://example2.com': {
+          id: 2,
           uri_pattern: 'http://example2.com',
+          rules: []
+        }
+      }
+      overwriteSite(
+        {
+          id: 1,
+          uri_pattern: 'http://example3.com',
+          rules: []
+        },
+        sites
+      )
+      overwriteSite(
+        {
+          id: 2,
+          uri_pattern: 'http://example4.com',
+          rules: []
+        },
+        sites
+      )
+      expect(sites).toEqual({
+        'http://example3.com': {
+          id: 1,
+          uri_pattern: 'http://example3.com',
+          rules: []
+        },
+        'http://example4.com': {
+          id: 2,
+          uri_pattern: 'http://example4.com',
           rules: []
         }
       })
     })
-    test.todo('single record 2')
-    test.todo('test rewrite pattern exists error')
-    test.todo('test rewrite')
+    test('test pattern collision', () => {
+      const new_site = {
+        id: 1,
+        uri_pattern: 'http://example1.com',
+        rules: []
+      }
+      const sites = {
+        'http://example1.com': {
+          id: 2,
+          uri_pattern: 'http://example1.com',
+          rules: []
+        }
+      }
+      expect(() => {
+        overwriteSite(new_site, sites)
+      }).toThrow('pattern already defined')
+    })
   })
-  test.todo('test add')
-  test.todo('test add pattern existed')
+  test('test add', () => {
+    // test rewrite rules
+    const new_site = {
+      uri_pattern: 'http://example.com',
+      rules: [{ pattern: 'a', backgroundColor: '1' }]
+    }
+    const sites = {}
+    overwriteSite(new_site, sites)
+    expect(sites).toEqual({
+      'http://example.com': {
+        id: 1,
+        uri_pattern: 'http://example.com',
+        rules: [{ pattern: 'a', backgroundColor: '1' }]
+      }
+    })
+  })
+  test('test add pattern collision', () => {
+    const new_site = {
+      uri_pattern: 'http://example1.com',
+      rules: []
+    }
+    const sites = {
+      'http://example1.com': {
+        id: 1,
+        uri_pattern: 'http://example1.com',
+        rules: []
+      }
+    }
+    expect(() => {
+      overwriteSite(new_site, sites)
+    }).toThrow('pattern already defined')
+  })
 })

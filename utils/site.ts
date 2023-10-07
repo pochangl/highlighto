@@ -27,10 +27,8 @@ export function overwriteSite(obj: ISite, sites: ISites) {
 
   const site = sites[obj.uri_pattern]
   if (site && obj.id !== site.id) {
-    console.log('case 1')
     throw new SiteOperationError('pattern already defined')
   } else if (site && obj.id === site.id) {
-    console.log('case 2')
     Object.assign(site, obj)
   } else if (obj.id) {
     for (const site of Object.values(sites)) {
@@ -41,9 +39,8 @@ export function overwriteSite(obj: ISite, sites: ISites) {
       }
     }
   } else {
-    console.log('case 4')
     // new pattern
-    const max = Math.max(...Object.values(sites).map((site) => site.id))
-    sites[obj.uri_pattern] = Object.assign({}, obj, { id: max })
+    const max = Math.max(0, ...Object.values(sites).map((site) => site.id))
+    sites[obj.uri_pattern] = Object.assign({}, obj, { id: max + 1 })
   }
 }
