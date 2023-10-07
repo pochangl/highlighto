@@ -5,11 +5,22 @@ export interface IRule {
 
 export function highlight(options: { html: string; rules: IRule[] }) {
   let html = options.html
-  let regex = new RegExp('(' + options.rules.map((rule) => rule.pattern).join('|') + ')', 'g')
-  let map = Object.fromEntries(new Map(options.rules.map((rule) => [rule.pattern, rule.backgroundColor])))
-  html = html.replace(regex, function (match) {
-    let color = map[match]
-    return `<span class="_highlighto" style="background-color: #${color}">${match}</span>`
+  let regex = new RegExp(
+    options.rules.map((rule) => rule.pattern).join('|'),
+    'gi'
+  )
+  let map = Object.fromEntries(
+    new Map(options.rules.map((rule) => [rule.pattern, rule.backgroundColor]))
+  )
+  html = html.replace(/>(?<text>[^[\]]+)</gi, function(...args1) {
+    // replace text part of html
+    let text = args1.at(-1).text
+    // replace keywords
+    text = text.replace(regex, function(matched) {
+      let color = map[matched]
+      return `<span class="_highlighto" style="background-color: #${color}">${matched}</span>`
+    })
+    return `>${text}<`
   })
   return html
 }

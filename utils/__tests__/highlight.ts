@@ -52,7 +52,7 @@ describe('highlight function', () => {
       )
     })
     test('prevent replace attribute', () => {
-      const input = '<p b="b">a b c</[]>'
+      const input = '<p b="b">a b c</p>'
       expect(
         highlight({
           html: input,
