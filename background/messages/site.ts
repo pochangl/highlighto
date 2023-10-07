@@ -1,8 +1,8 @@
 import type { PlasmoMessaging } from '@plasmohq/messaging'
 
-import { findSite, type ISite } from '~utils/site'
+import { findSite, type ISite, type ISites } from '~utils/site'
 
-const sites: ISite[] = [
+const sites: ISites = Object.fromEntries(new Map([
   {
     uri_pattern: 'https://docs.plasmo.com',
     rules: [
@@ -12,7 +12,9 @@ const sites: ISite[] = [
       }
     ]
   }
-]
+].map((site) => {
+  return [site.uri_pattern, site]
+})))
 
 export interface IGetSiteRequest {
   action: 'get'
@@ -29,13 +31,8 @@ export interface ISiteResponseData {
   site?: ISite
 }
 
-function getSite(pattern: string, sites: ISite[]) {
-  for (const site of sites) {
-    if (site.uri_pattern == pattern) {
-      return site
-    }
-  }
-  return null
+function getSite(pattern: string, sites: ISites) {
+  return sites[pattern] || null
 }
 
 const handler: PlasmoMessaging.MessageHandler = async (
@@ -52,7 +49,7 @@ const handler: PlasmoMessaging.MessageHandler = async (
     if (site) {
       Object.assign(site, req.body.site)
     } else {
-      sites.push(req.body.site)
+      sites[pattern] = req.body.site
     }
     res.send({ errorCode: 0 })
   } else {
