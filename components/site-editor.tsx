@@ -88,10 +88,9 @@ export class SiteEditor extends Component<
 
 /** simple rule editor for editing keyword in frontend */
 export class SingleRuleEditor extends Component<
-  { site: ISite, rule: IRule },
+  { site: ISite; rule: IRule },
   { version: number }
 > {
-
   render() {
     return (
       <Card elevation={0}>

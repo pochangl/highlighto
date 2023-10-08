@@ -1,12 +1,6 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals'
 
-
-
-import { findSite, overwriteSite } from '~utils/site';
-
-
-
-
+import { findSite, overwriteSite } from '~utils/site'
 
 describe('findSites', () => {
   test('exact', () => {
