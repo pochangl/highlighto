@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import type { PlasmoCreateShadowRoot, PlasmoCSConfig } from 'plasmo'
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 
 import type { PlasmoMessaging } from '@plasmohq/messaging'
 
@@ -34,13 +35,22 @@ export const config: PlasmoCSConfig = {
   run_at: 'document_end'
 }
 
+let cachedHtml: string
+
+function flushKeywords(site: ISite) {
+  if (!cachedHtml) {
+    cachedHtml = document.body.innerHTML
+  }
+  document.body.innerHTML = highlight({
+    html: cachedHtml,
+    rules: site.rules
+  })
+}
+
 async function update() {
   const site = await retrieveSite(window.location.href)
   if (site !== null) {
-    document.body.innerHTML = highlight({
-      html: document.body.innerHTML,
-      rules: site.rules
-    })
+    flushKeywords(site)
   }
 }
 
@@ -79,7 +89,9 @@ const Content = () => {
   async function onSave(rule: IRule) {
     site.rules.push(rule)
     await saveSite(site)
+
     setSelect(false)
+    flushKeywords(site)
   }
   const theme = createTheme({
     components: {
