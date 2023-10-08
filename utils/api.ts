@@ -8,7 +8,7 @@ import type {
 
 import type { ISite } from './site'
 
-export async function retrieveSite(pattern: string) {
+export async function guessSite(pattern: string) {
   const response = await sendToBackground<IGetSiteRequest, ISiteResponseData>({
     name: 'site',
     body: {

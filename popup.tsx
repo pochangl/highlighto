@@ -5,7 +5,7 @@ import Icon from '@mui/material/Icon'
 import { Component } from 'react'
 
 import type { ISitePageArgument } from '~tabs/site'
-import { retrieveSite } from '~utils/api'
+import { guessSite } from '~utils/api'
 import type { ISite } from '~utils/site'
 import { gotoTab } from '~utils/tab'
 
@@ -34,7 +34,7 @@ class Popup extends Component<{}, { site: ISite | null; ready: boolean }> {
 
   async getSite() {
     const tab = await getActiveTab()
-    const site = await retrieveSite(tab.url)
+    const site = await guessSite(tab.url)
 
     this.setState({
       site: site,

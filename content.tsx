@@ -17,7 +17,7 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
-import { retrieveSite, saveSite } from '~utils/api'
+import { guessSite, saveSite } from '~utils/api'
 import { highlight, type IRule } from '~utils/highlight'
 import type { ISite } from '~utils/site'
 
@@ -48,7 +48,7 @@ function flushKeywords(site: ISite) {
 }
 
 async function update() {
-  const site = await retrieveSite(window.location.href)
+  const site = await guessSite(window.location.href)
   if (site !== null) {
     flushKeywords(site)
   }
@@ -76,7 +76,7 @@ const Content = () => {
     backgroundColor: 'blue'
   })
   onSelection = async (event) => {
-    const site = await retrieveSite(window.location.href)
+    const site = await guessSite(window.location.href)
     if (site) {
       setSite(site)
     }
