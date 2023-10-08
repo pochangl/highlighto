@@ -72,6 +72,23 @@ describe('highlight function', () => {
         '<p b="b">a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</p>'
       )
     })
+    test('case insensitive', () => {
+      const input = '<p>welcome Welcome</p>'
+      expect(
+        highlight({
+          html: input,
+          rules: [
+            {
+              pattern: 'Welcome',
+              backgroundColor: '#112233',
+              fontColor: '#0000FF'
+            }
+          ]
+        })
+      ).toEqual(
+        '<p><span class="_highlighto" style="background-color: #112233; color: #0000FF">welcome</span> <span class="_highlighto" style="background-color: #112233; color: #0000FF">Welcome</span></p>'
+      )
+    })
   })
   test('multiple patterns', () => {
     const input = '<p>a b c</p>'
@@ -94,7 +111,11 @@ describe('highlight function', () => {
       const result = highlight({
         html,
         rules: [
-          { pattern: 'options', backgroundColor: '#FF0000', fontColor: '#0000FF' }
+          {
+            pattern: 'options',
+            backgroundColor: '#FF0000',
+            fontColor: '#0000FF'
+          }
         ]
       })
       // was
