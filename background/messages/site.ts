@@ -54,18 +54,17 @@ const handler: PlasmoMessaging.MessageHandler = async (
   if (req.body.action == 'get') {
     const uri = req.body.uri
     const site = findSite(uri, sites)
-    res.send({ errorCode: 0, site: site })
+    return res.send({ errorCode: 0, site: site })
   } else if (req.body.action == 'save') {
     try {
       overwriteSite(req.body.site, sites)
       saveSites(storage, sites)
     } catch (error) {
-      res.send({ errorCode: 400 })
-      return
+      return res.send({ errorCode: 400 })
     }
-    res.send({ errorCode: 0 })
+    return res.send({ errorCode: 0 })
   } else {
-    res.send({ errorCode: 404 })
+    return res.send({ errorCode: 404 })
   }
 }
 
