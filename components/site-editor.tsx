@@ -1,4 +1,12 @@
-import { Button, Grid, TextField } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  Grid,
+  TextField
+} from '@mui/material'
 import { Component } from 'react'
 
 import { saveSite } from '~utils/api'
@@ -70,8 +78,37 @@ export class SiteEditor extends Component<
           variant="contained">
           New Rule
         </Button>
-        <Button type="submit" variant="contained" onClick={() => this.save()}>Save</Button>
+        <Button type="submit" variant="contained" onClick={() => this.save()}>
+          Save
+        </Button>
       </Grid>
+    )
+  }
+}
+
+/** simple rule editor for editing keyword in frontend */
+export class SingleRuleEditor extends Component<
+  { site: ISite, rule: IRule },
+  { version: number }
+> {
+
+  render() {
+    return (
+      <Card elevation={0}>
+        <CardContent>
+          <Grid container direction="column" rowGap={3}>
+            <div>uri pattern:</div>
+            <TextField
+              style={{ width: '600px' }}
+              defaultValue={this.props.site.uri_pattern}
+              onChange={(event) =>
+                (this.props.site.uri_pattern = event.target.value)
+              }
+            />
+            <RuleEditor rule={this.props.rule} />
+          </Grid>
+        </CardContent>
+      </Card>
     )
   }
 }

@@ -1,4 +1,4 @@
-import type { PlasmoMessaging } from '@plasmohq/messaging'
+import { sendToContentScript, type PlasmoMessaging } from '@plasmohq/messaging'
 import { Storage } from '@plasmohq/storage'
 
 import {
@@ -56,3 +56,31 @@ const handler: PlasmoMessaging.MessageHandler = async (
 }
 
 export default handler
+
+export interface IMenuEvent {
+  selection: string
+  url: string
+}
+
+const SelectionEventID = 'highlighto-selection'
+
+chrome.contextMenus.create({
+  id: SelectionEventID,
+  title: 'highlight keyword',
+  contexts: ['selection']
+})
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  info.menuItemId
+  const selection = info.selectionText
+  const url = tab.url
+
+  sendToContentScript<IMenuEvent>({
+    tabId: tab.id,
+    name: 'highlighto-selection',
+    body: {
+      selection,
+      url
+    }
+  })
+})
