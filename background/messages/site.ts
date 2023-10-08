@@ -1,20 +1,33 @@
 import type { PlasmoMessaging } from '@plasmohq/messaging'
+import { Storage } from '@plasmohq/storage'
 
-import { findSite, type ISite, type ISites } from '~utils/site'
+import {
+  findSite,
+  overwriteSite,
+  type ISavedSite,
+  type ISite,
+  type ISites
+} from '~utils/site'
 
-const sites: ISites = Object.fromEntries(new Map([
-  {
-    uri_pattern: 'https://docs.plasmo.com',
-    rules: [
-      {
-        pattern: 'Welcome',
-        backgroundColor: 'FF0000'
-      }
-    ]
-  }
-].map((site) => {
-  return [site.uri_pattern, site]
-})))
+export async function loadSites(storage: Storage) {
+  const siteStr = await storage.get('sites')
+  const listSites: ISavedSite[] = JSON.parse(siteStr)
+  return Object.fromEntries(
+    new Map(listSites.map((site) => [site.uri_pattern, site]))
+  )
+}
+
+export async function saveSites(storage: Storage, sites: ISites) {
+  const listSites: ISavedSite[] = Object.values(sites)
+  const sitesStr = JSON.stringify(listSites)
+  await storage.set('sites', sitesStr)
+}
+
+const storage = new Storage({
+  area: 'local'
+})
+
+let sites: ISites
 
 export interface IGetSiteRequest {
   action: 'get'
@@ -35,17 +48,20 @@ const handler: PlasmoMessaging.MessageHandler = async (
   req: PlasmoMessaging.Request<string, IGetSiteRequest | ISaveSiteRequest>,
   res: PlasmoMessaging.Response<ISiteResponseData>
 ) => {
+  if (!sites) {
+    await loadSites(storage)
+  }
   if (req.body.action == 'get') {
     const uri = req.body.uri
     const site = findSite(uri, sites)
     res.send({ errorCode: 0, site: site })
   } else if (req.body.action == 'save') {
-    const pattern = req.body.site.uri_pattern
-    const site = getSite(pattern, sites)
-    if (site) {
-      Object.assign(site, req.body.site)
-    } else {
-      sites[pattern] = req.body.site
+    try {
+      overwriteSite(req.body.site, sites)
+      saveSites(storage, sites)
+    } catch (error) {
+      res.send({ errorCode: 400 })
+      return
     }
     res.send({ errorCode: 0 })
   } else {

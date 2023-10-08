@@ -1,3 +1,5 @@
+import type { Storage } from '@plasmohq/storage'
+
 import type { IRule } from './highlight'
 
 export interface ISite {
@@ -6,8 +8,12 @@ export interface ISite {
   rules: IRule[]
 }
 
+export interface ISavedSite extends ISite {
+  id: number
+}
+
 export interface ISites {
-  [key: string]: ISite & { id: number }
+  [key: string]: ISavedSite
 }
 
 export function findSite(uri: string, sites: ISites): ISite | null {
@@ -34,7 +40,7 @@ export function overwriteSite(obj: ISite, sites: ISites) {
     for (const site of Object.values(sites)) {
       if (obj.id === site.id) {
         delete sites[site.uri_pattern]
-        sites[obj.uri_pattern] = obj as ISite & { id: number }
+        sites[obj.uri_pattern] = obj as ISavedSite
         break
       }
     }
