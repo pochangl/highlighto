@@ -1,105 +1,69 @@
-import { Button } from '@mui/material';
-import { Component, useState } from 'react';
+import { Button, Grid, TextField } from '@mui/material'
+import { Component } from 'react'
 
+import { saveSite } from '~utils/api'
+import type { IRule } from '~utils/highlight'
+import type { ISite } from '~utils/site'
 
-
-import { saveSite } from '~utils/api';
-import type { IRule } from '~utils/highlight';
-import type { ISite } from '~utils/site';
-
-
-
-
-
-function deepcopy<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj))
+function RuleEditor({ rule }: { rule: IRule }) {
+  return (
+    <Grid container columnGap={3}>
+      <TextField
+        defaultValue={rule.pattern}
+        label="Pattern"
+        onChange={(event) => {
+          rule.pattern = event.target.value
+        }}
+      />
+      <TextField
+        defaultValue={rule.backgroundColor}
+        label="Color"
+        onChange={(event) => {
+          rule.backgroundColor = event.target.value
+        }}
+      />
+    </Grid>
+  )
 }
-
-class TextField extends Component<{
-  value: string
-  onChange: (value: string) => void
-}, {text: string}> {
+export class SiteEditor extends Component<
+  { site: ISite },
+  { version: number }
+> {
   constructor(props) {
-    super(props);
-    this.state = {text: props.value}
+    super(props)
+    this.state = { version: 1 }
+  }
+  save() {
+    return saveSite(this.props.site)
   }
 
   render() {
-    return <input value={this.state.text} onChange={(event) => {
-      const value = event.target.value
-      this.setState({
-        text: value
-      })
-      this.props.onChange(value)
-    }} />
-  }
-}
-
-function RuleEditor({
-  rule,
-  onChange
-}: {
-  rule: IRule
-  onChange: (value: IRule) => void
-}) {
-  rule = deepcopy(rule)
-
-  return (
-    <p>
-      Pattern:&nbsp;
-      <TextField
-        value={rule.pattern}
-        onChange={(value) => {
-          rule.pattern = value
-          onChange(rule)
-        }}
-      />
-      &nbsp; Color:&nbsp;
-      <TextField
-        value={rule.backgroundColor}
-        onChange={(value) => {
-          rule.backgroundColor = value
-          onChange(rule)
-        }}
-      />
-    </p>
-  )
-}
-
-export function SiteEditor({site}: {site: ISite}) {
-  const [version, setVersion] = useState(1)
-  function save() {
-    return saveSite(site)
-  }
-
-  return (
-    <form onSubmit={save}>
-      <div>
-        <table>
-          <p>
-            uri pattern: &nbsp;
-            <TextField
-              value={site.uri_pattern}
-              onChange={(value) => site.uri_pattern}
-            />
-          </p>
-          {site.rules.map((rule, index) => (
-            <RuleEditor
-              key={index}
-              rule={rule}
-              onChange={(value) => Object.assign(rule, value)}
-            />
-          ))}
-          <Button onClick={
-            function () {site.rules.push({
+    return (
+      <Grid container direction="column" rowGap={3}>
+        <div>uri pattern:</div>
+        <TextField
+          style={{ width: '100%' }}
+          defaultValue={this.props.site.uri_pattern}
+          onChange={(event) =>
+            (this.props.site.uri_pattern = event.target.value)
+          }
+        />
+        {this.props.site.rules.map((rule, index) => (
+          <RuleEditor key={index} rule={rule} />
+        ))}
+        <Button
+          onClick={() => {
+            this.props.site.rules.push({
               pattern: '',
               backgroundColor: '0000FF'
             })
-            setVersion(version + 1)
-          }} variant="contained">New Rule</Button>
-          <input type="submit" value="Save" />
-        </table>
-      </div>
-    </form>
-  )
+            this.setState({ version: this.state.version + 1 })
+          }}
+          variant="contained">
+          New Rule
+        </Button>
+        <Button type="submit" variant="contained" onClick={() => this.save()}>Save</Button>
+      </Grid>
+    )
+  }
 }
