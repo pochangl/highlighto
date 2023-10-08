@@ -1,24 +1,24 @@
-import createCache from '@emotion/cache';
-import { CacheProvider } from '@emotion/react';
-import { Button, createTheme, Dialog, DialogActions, DialogContent, DialogTitle, ThemeProvider } from '@mui/material';
-import type { PlasmoCreateShadowRoot, PlasmoCSConfig } from 'plasmo';
-import { useState } from 'react';
+import createCache from '@emotion/cache'
+import { CacheProvider } from '@emotion/react'
+import {
+  Button,
+  createTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  ThemeProvider
+} from '@mui/material'
+import type { PlasmoCreateShadowRoot, PlasmoCSConfig } from 'plasmo'
+import { useState } from 'react'
 
+import type { PlasmoMessaging } from '@plasmohq/messaging'
 
-
-import type { PlasmoMessaging } from '@plasmohq/messaging';
-
-
-
-import type { IMenuEvent } from '~background/messages/site';
-import { SingleRuleEditor } from '~components/site-editor';
-import { retrieveSite, saveSite } from '~utils/api';
-import { highlight, type IRule } from '~utils/highlight';
-import type { ISite } from '~utils/site';
-
-
-
-
+import type { IMenuEvent } from '~background/messages/site'
+import { SingleRuleEditor } from '~components/site-editor'
+import { retrieveSite, saveSite } from '~utils/api'
+import { highlight, type IRule } from '~utils/highlight'
+import type { ISite } from '~utils/site'
 
 const styleElement = document.createElement('style')
 
@@ -96,25 +96,18 @@ const Content = () => {
         <Dialog open={selected} onClose={() => setSelect(false)}>
           <DialogTitle> New Rule </DialogTitle>
           <DialogContent>
-            <SingleRuleEditor
-              site={site}
-              rule={rule}
-              key={rule.pattern}
-            />
+            <SingleRuleEditor site={site} rule={rule} key={rule.pattern} />
           </DialogContent>
           <DialogActions>
-
-          <Button
-            type="submit"
-            onClick={() => setSelect(false)}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={() => onSave(rule)}>
-            Save
-          </Button>
+            <Button type="submit" onClick={() => setSelect(false)}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              onClick={() => onSave(rule)}>
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
       </CacheProvider>
