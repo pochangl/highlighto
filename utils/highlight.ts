@@ -12,7 +12,7 @@ export function highlight(options: { html: string; rules: IRule[] }) {
   let map = Object.fromEntries(
     new Map(options.rules.map((rule) => [rule.pattern, rule.backgroundColor]))
   )
-  html = html.replace(/>(?<text>[^[\]]+)</gi, function(...args1) {
+  html = html.replace(/>(?<text>[^<>]+)</gi, function(...args1) {
     // replace text part of html
     let text = args1.at(-1).text
     // replace keywords

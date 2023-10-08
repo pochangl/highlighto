@@ -77,4 +77,19 @@ describe('highlight function', () => {
       '<p><span class="_highlighto" style="background-color: #112233">a</span> <span class="_highlighto" style="background-color: #445566">b</span> c</p>'
     )
   })
+
+  describe('failed scenario', () => {
+    test('case 1', () => {
+      const html = '<p><a href="#options">options</a><p>'
+      const result = highlight({
+        html,
+        rules: [{ pattern: 'options', backgroundColor: 'FF0000' }]
+      })
+      // was
+      // <p><a href=\"#<span class=\"_highlighto\" style=\"background-color: #FF0000\">options</span>\"><span class=\"_highlighto\" style=\"background-color: #FF0000\">options</span></a><p>
+      expect(result).toEqual(
+        '<p><a href="#options"><span class="_highlighto" style="background-color: #FF0000">options</span></a><p>'
+      )
+    })
+  })
 })
