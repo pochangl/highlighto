@@ -10,7 +10,7 @@ import {
 } from '~utils/site'
 
 export async function loadSites(storage: Storage) {
-  const siteStr = await storage.get('sites')
+  const siteStr = (await storage.get('sites')) ?? '[]'
   const listSites: ISavedSite[] = JSON.parse(siteStr)
   return Object.fromEntries(
     new Map(listSites.map((site) => [site.uri_pattern, site]))
@@ -49,7 +49,7 @@ const handler: PlasmoMessaging.MessageHandler = async (
   res: PlasmoMessaging.Response<ISiteResponseData>
 ) => {
   if (!sites) {
-    await loadSites(storage)
+    sites = await loadSites(storage)
   }
   if (req.body.action == 'get') {
     const uri = req.body.uri
