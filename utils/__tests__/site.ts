@@ -1,6 +1,12 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, test } from '@jest/globals';
 
-import { findSite, overwriteSite } from '~utils/site'
+
+
+import { findSite, overwriteSite } from '~utils/site';
+
+
+
+
 
 describe('findSites', () => {
   test('exact', () => {
@@ -73,7 +79,7 @@ describe('overwriteSite function', () => {
       const new_site = {
         id: 1,
         uri_pattern: 'http://example.com',
-        rules: [{ pattern: 'a', backgroundColor: '1' }]
+        rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
       }
       const sites = {
         'http://example.com': {
@@ -87,7 +93,7 @@ describe('overwriteSite function', () => {
         'http://example.com': {
           id: 1,
           uri_pattern: 'http://example.com',
-          rules: [{ pattern: 'a', backgroundColor: '1' }]
+          rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
         }
       })
     })
@@ -189,7 +195,7 @@ describe('overwriteSite function', () => {
     // test rewrite rules
     const new_site = {
       uri_pattern: 'http://example.com',
-      rules: [{ pattern: 'a', backgroundColor: '1' }]
+      rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
     }
     const sites = {}
     overwriteSite(new_site, sites)
@@ -197,7 +203,7 @@ describe('overwriteSite function', () => {
       'http://example.com': {
         id: 1,
         uri_pattern: 'http://example.com',
-        rules: [{ pattern: 'a', backgroundColor: '1' }]
+        rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
       }
     })
   })

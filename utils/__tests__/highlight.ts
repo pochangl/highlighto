@@ -9,10 +9,12 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'a', backgroundColor: '112233' }]
+          rules: [
+            { pattern: 'a', backgroundColor: '#112233', fontColor: '#0000FF' }
+          ]
         })
       ).toEqual(
-        '<p><span class="_highlighto" style="background-color: #112233">a</span> b c</p>'
+        '<p><span class="_highlighto" style="background-color: #112233; color: #0000FF">a</span> b c</p>'
       )
     })
 
@@ -21,10 +23,12 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'b', backgroundColor: '112233' }]
+          rules: [
+            { pattern: 'b', backgroundColor: '#112233', fontColor: '#0000FF' }
+          ]
         })
       ).toEqual(
-        '<p>a <span class="_highlighto" style="background-color: #112233">b</span> c</p>'
+        '<p>a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</p>'
       )
     })
 
@@ -33,10 +37,12 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'c', backgroundColor: '112233' }]
+          rules: [
+            { pattern: 'c', backgroundColor: '#112233', fontColor: '#0000FF' }
+          ]
         })
       ).toEqual(
-        '<p>a b <span class="_highlighto" style="background-color: #112233">c</span></p>'
+        '<p>a b <span class="_highlighto" style="background-color: #112233; color: #0000FF">c</span></p>'
       )
     })
 
@@ -45,10 +51,12 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'b', backgroundColor: '112233' }]
+          rules: [
+            { pattern: 'b', backgroundColor: '#112233', fontColor: '#0000FF' }
+          ]
         })
       ).toEqual(
-        '<b>a <span class="_highlighto" style="background-color: #112233">b</span> c</b>'
+        '<b>a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</b>'
       )
     })
     test('prevent replace attribute', () => {
@@ -56,10 +64,12 @@ describe('highlight function', () => {
       expect(
         highlight({
           html: input,
-          rules: [{ pattern: 'b', backgroundColor: '112233' }]
+          rules: [
+            { pattern: 'b', backgroundColor: '#112233', fontColor: '#0000FF' }
+          ]
         })
       ).toEqual(
-        '<p b="b">a <span class="_highlighto" style="background-color: #112233">b</span> c</p>'
+        '<p b="b">a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</p>'
       )
     })
   })
@@ -69,12 +79,12 @@ describe('highlight function', () => {
       highlight({
         html: input,
         rules: [
-          { pattern: 'a', backgroundColor: '112233' },
-          { pattern: 'b', backgroundColor: '445566' }
+          { pattern: 'a', backgroundColor: '#112233', fontColor: '#1122FF' },
+          { pattern: 'b', backgroundColor: '#445566', fontColor: '#4455FF' }
         ]
       })
     ).toEqual(
-      '<p><span class="_highlighto" style="background-color: #112233">a</span> <span class="_highlighto" style="background-color: #445566">b</span> c</p>'
+      '<p><span class="_highlighto" style="background-color: #112233; color: #1122FF">a</span> <span class="_highlighto" style="background-color: #445566; color: #4455FF">b</span> c</p>'
     )
   })
 
@@ -83,12 +93,14 @@ describe('highlight function', () => {
       const html = '<p><a href="#options">options</a><p>'
       const result = highlight({
         html,
-        rules: [{ pattern: 'options', backgroundColor: 'FF0000' }]
+        rules: [
+          { pattern: 'options', backgroundColor: '#FF0000', fontColor: '#0000FF' }
+        ]
       })
       // was
-      // <p><a href=\"#<span class=\"_highlighto\" style=\"background-color: #FF0000\">options</span>\"><span class=\"_highlighto\" style=\"background-color: #FF0000\">options</span></a><p>
+      // <p><a href=\"#<span class=\"_highlighto\" style=\"background-color: #FF0000; color: #0000FF\">options</span>\"><span class=\"_highlighto\" style=\"background-color: #FF0000; color: #0000FF\">options</span></a><p>
       expect(result).toEqual(
-        '<p><a href="#options"><span class="_highlighto" style="background-color: #FF0000">options</span></a><p>'
+        '<p><a href="#options"><span class="_highlighto" style="background-color: #FF0000; color: #0000FF">options</span></a><p>'
       )
     })
   })

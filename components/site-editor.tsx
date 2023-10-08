@@ -22,6 +22,13 @@ function RuleEditor({ rule }: { rule: IRule }) {
           rule.backgroundColor = event.target.value
         }}
       />
+      <TextField
+        defaultValue={rule.fontColor}
+        label="Color"
+        onChange={(event) => {
+          rule.fontColor = event.target.value
+        }}
+      />
     </Grid>
   )
 }
@@ -55,7 +62,8 @@ export class SiteEditor extends Component<
           onClick={() => {
             this.props.site.rules.push({
               pattern: '',
-              backgroundColor: '0000FF'
+              backgroundColor: 'blue',
+              fontColor: 'white'
             })
             this.setState({ version: this.state.version + 1 })
           }}
