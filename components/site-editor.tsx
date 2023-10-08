@@ -1,8 +1,7 @@
-import { sendToBackground } from '@plasmohq/messaging'
 import { Component } from 'react'
-import { ISaveSiteRequest, ISiteResponseData } from '~background/messages/site'
-import { IRule } from '~utils/highlight'
-import { ISite } from '~utils/site'
+import { saveSite } from '~utils/api'
+import type { IRule } from '~utils/highlight'
+import type { ISite } from '~utils/site'
 
 function deepcopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj))
@@ -62,15 +61,8 @@ function RuleEditor({
 export function SiteEditor({site}: {site: ISite}) {
   site = deepcopy(site) // replicate site data
 
-  async function save() {
-
-    await sendToBackground<ISaveSiteRequest, ISiteResponseData>({
-      name: 'site',
-      body: {
-        action: 'save',
-        site
-      }
-    })
+  function save() {
+    return saveSite(site)
   }
 
   return (

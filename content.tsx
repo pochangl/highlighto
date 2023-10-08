@@ -1,9 +1,7 @@
 import type { PlasmoCSConfig } from 'plasmo'
 
-import { sendToBackground } from '@plasmohq/messaging'
-
-import type { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { highlight } from '~utils/highlight'
+import { retrieveSite } from '~utils/api'
 
 export const config: PlasmoCSConfig = {
   matches: ['*://*/*'],
@@ -11,14 +9,7 @@ export const config: PlasmoCSConfig = {
 }
 
 async function update() {
-  const response = await sendToBackground<IGetSiteRequest, ISiteResponseData>({
-    name: 'site',
-    body: {
-      action: 'get',
-      uri: window.location.href
-    }
-  })
-  const site = response.site
+  const site = await retrieveSite(window.location.href)
   if (site !== null) {
     document.body.innerHTML = highlight({
       html: document.body.innerHTML,

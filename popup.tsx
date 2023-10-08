@@ -1,10 +1,7 @@
 import { Component } from 'react'
-
-import { sendToBackground } from '@plasmohq/messaging'
-
-import type { IGetSiteRequest, ISiteResponseData } from '~background/messages/site'
 import { SiteEditor } from '~components/site-editor'
 import type { ISite } from '~utils/site'
+import { retrieveSite } from '~utils/api'
 
 function getActiveTab() {
   return new Promise<chrome.tabs.Tab>((resolve, reject) => {
@@ -30,15 +27,9 @@ class Popup extends Component<{}, { site: ISite | null }> {
 
   async getSite() {
     const tab = await getActiveTab()
-    const resp = await sendToBackground<IGetSiteRequest, ISiteResponseData>({
-      name: 'site',
-      body: {
-        action: 'get',
-        uri: tab.url
-      }
-    })
+    const site = await retrieveSite(tab.url)
     this.setState({
-      site: resp.site
+      site: site
     })
   }
 
