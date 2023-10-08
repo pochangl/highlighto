@@ -1,7 +1,7 @@
 import type { PlasmoCSConfig } from 'plasmo'
 
-import { highlight } from '~utils/highlight'
 import { retrieveSite } from '~utils/api'
+import { highlight } from '~utils/highlight'
 
 export const config: PlasmoCSConfig = {
   matches: ['*://*/*'],
