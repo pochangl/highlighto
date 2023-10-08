@@ -3,25 +3,12 @@ import { Storage } from '@plasmohq/storage'
 
 import {
   findSite,
+  loadSites,
   overwriteSite,
-  type ISavedSite,
+  saveSites,
   type ISite,
   type ISites
 } from '~utils/site'
-
-export async function loadSites(storage: Storage) {
-  const siteStr = (await storage.get('sites')) ?? '[]'
-  const listSites: ISavedSite[] = JSON.parse(siteStr)
-  return Object.fromEntries(
-    new Map(listSites.map((site) => [site.uri_pattern, site]))
-  )
-}
-
-export async function saveSites(storage: Storage, sites: ISites) {
-  const listSites: ISavedSite[] = Object.values(sites)
-  const sitesStr = JSON.stringify(listSites)
-  await storage.set('sites', sitesStr)
-}
 
 const storage = new Storage({
   area: 'local'

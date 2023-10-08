@@ -1,3 +1,5 @@
+import type { Storage } from '@plasmohq/storage'
+
 import type { IRule } from './highlight'
 
 export interface ISite {
@@ -47,4 +49,18 @@ export function overwriteSite(obj: ISite, sites: ISites) {
     const max = Math.max(0, ...Object.values(sites).map((site) => site.id))
     sites[obj.uri_pattern] = Object.assign({}, obj, { id: max + 1 })
   }
+}
+
+export async function loadSites(storage: Storage) {
+  const siteStr = (await storage.get('sites')) ?? '[]'
+  const listSites: ISavedSite[] = JSON.parse(siteStr)
+  return Object.fromEntries(
+    new Map(listSites.map((site) => [site.uri_pattern, site]))
+  )
+}
+
+export async function saveSites(storage: Storage, sites: ISites) {
+  const listSites: ISavedSite[] = Object.values(sites)
+  const sitesStr = JSON.stringify(listSites)
+  await storage.set('sites', sitesStr)
 }
