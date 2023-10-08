@@ -1,11 +1,13 @@
+import '~assets/material-icons-font.css'
+
 import { Button, Grid } from '@mui/material'
 import Icon from '@mui/material/Icon'
 import { Component } from 'react'
 
+import type { ISitePageArgument } from '~tabs/site'
 import { retrieveSite } from '~utils/api'
 import type { ISite } from '~utils/site'
-
-import '~assets/material-icons-font.css'
+import { gotoTab } from '~utils/tab'
 
 function getActiveTab() {
   return new Promise<chrome.tabs.Tab>((resolve, reject) => {
@@ -45,10 +47,7 @@ class Popup extends Component<{}, { site: ISite | null; ready: boolean }> {
       uri_pattern: tab.url,
       rules: []
     }
-    this.setState({
-      site: site
-    })
-    chrome.runtime.openOptionsPage()
+    gotoTab<ISitePageArgument>('site.html', { uri_pattern: tab.url })
   }
 
   render() {

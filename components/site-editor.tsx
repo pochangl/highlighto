@@ -1,7 +1,15 @@
-import { Component } from 'react'
-import { saveSite } from '~utils/api'
-import type { IRule } from '~utils/highlight'
-import type { ISite } from '~utils/site'
+import { Button } from '@mui/material';
+import { Component, useState } from 'react';
+
+
+
+import { saveSite } from '~utils/api';
+import type { IRule } from '~utils/highlight';
+import type { ISite } from '~utils/site';
+
+
+
+
 
 function deepcopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj))
@@ -59,8 +67,7 @@ function RuleEditor({
 }
 
 export function SiteEditor({site}: {site: ISite}) {
-  site = deepcopy(site) // replicate site data
-
+  const [version, setVersion] = useState(1)
   function save() {
     return saveSite(site)
   }
@@ -83,6 +90,13 @@ export function SiteEditor({site}: {site: ISite}) {
               onChange={(value) => Object.assign(rule, value)}
             />
           ))}
+          <Button onClick={
+            function () {site.rules.push({
+              pattern: '',
+              backgroundColor: '0000FF'
+            })
+            setVersion(version + 1)
+          }} variant="contained">New Rule</Button>
           <input type="submit" value="Save" />
         </table>
       </div>
