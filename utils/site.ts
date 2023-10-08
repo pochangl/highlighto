@@ -1,5 +1,3 @@
-import type { Storage } from '@plasmohq/storage'
-
 import type { IRule } from './highlight'
 
 export interface ISite {
