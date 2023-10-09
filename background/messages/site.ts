@@ -14,6 +14,12 @@ const storage = new Storage({
   area: 'local'
 })
 
+storage.watch({
+  async sites(c) {
+    sites = await loadSites(storage)
+  }
+})
+
 let sites: ISites
 
 export interface IGetSiteRequest {
