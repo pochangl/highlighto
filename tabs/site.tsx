@@ -5,6 +5,8 @@ import { Storage } from '@plasmohq/storage'
 import { SiteEditor } from '~components/site-editor'
 import { retrieveSite, type ISite } from '~utils/site'
 
+import '~assets/material-icons-font.css'
+
 export interface ISitePageArgument {
   siteId?: string
   uri_pattern?: string

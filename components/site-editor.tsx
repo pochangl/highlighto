@@ -1,19 +1,17 @@
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  Grid,
-  TextField
-} from '@mui/material'
+import { Button, Card, CardContent, Grid, Icon, TextField } from '@mui/material'
 import { Component } from 'react'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
 import type { ISite } from '~utils/site'
 
-function RuleEditor({ rule }: { rule: IRule }) {
+function RuleEditor({
+  rule,
+  onRemove
+}: {
+  rule: IRule
+  onRemove?: (rule: IRule) => void
+}) {
   return (
     <Grid container columnGap={3}>
       <TextField
@@ -37,6 +35,11 @@ function RuleEditor({ rule }: { rule: IRule }) {
           rule.fontColor = event.target.value
         }}
       />
+      {onRemove && (
+        <Button onClick={() => onRemove(rule)}>
+          <Icon> delete </Icon>
+        </Button>
+      )}
     </Grid>
   )
 }
@@ -52,6 +55,13 @@ export class SiteEditor extends Component<
     return saveSite(this.props.site)
   }
 
+  removeRule(rule: IRule) {
+    console.log('removing', this.props.site.rules.length, rule)
+    this.props.site.rules = this.props.site.rules.filter((r) => r !== rule)
+    console.log('removed', this.props.site.rules.length, rule)
+    this.setState({ version: this.state.version + 1 })
+  }
+
   render() {
     return (
       <Grid container direction="column" rowGap={3}>
@@ -64,7 +74,11 @@ export class SiteEditor extends Component<
           }
         />
         {this.props.site.rules.map((rule, index) => (
-          <RuleEditor key={index} rule={rule} />
+          <RuleEditor
+            key={rule.pattern + index}
+            rule={rule}
+            onRemove={(r) => this.removeRule(r)}
+          />
         ))}
         <Button
           onClick={() => {
