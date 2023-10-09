@@ -11,8 +11,8 @@ import { gotoTab } from '~utils/tab'
 
 function getActiveTab() {
   return new Promise<chrome.tabs.Tab>((resolve, reject) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      var activeTab = tabs[0]
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0]
       if (!activeTab) {
         reject()
       } else {
@@ -37,7 +37,7 @@ class Popup extends Component<{}, { site: ISite | null; ready: boolean }> {
     const site = await guessSite(tab.url)
 
     this.setState({
-      site: site,
+      site,
       ready: true
     })
     if (site) {
@@ -47,10 +47,6 @@ class Popup extends Component<{}, { site: ISite | null; ready: boolean }> {
 
   async addNew() {
     const tab = await getActiveTab()
-    const site: ISite = {
-      uri_pattern: tab.url,
-      rules: []
-    }
     gotoTab<ISitePageArgument>('site.html', { uri_pattern: tab.url })
   }
 

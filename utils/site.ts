@@ -17,8 +17,8 @@ export interface ISites {
 }
 
 export function findSite(uri: string, sites: ISites): ISite | null {
-  for (const [uri_pattern, site] of Object.entries(sites)) {
-    const pattern = new RegExp(uri_pattern)
+  for (const [uriPattern, site] of Object.entries(sites)) {
+    const pattern = new RegExp(uriPattern)
     if (uri.search(pattern) >= 0) {
       return site
     }

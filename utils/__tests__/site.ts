@@ -42,10 +42,10 @@ describe('findSites', () => {
       [site.uri_pattern]: site
     })
     expect(found).toBe(site)
-    const not_found = findSite('http://example.com/1a/', {
+    const notFound = findSite('http://example.com/1a/', {
       [site.uri_pattern]: site
     })
-    expect(not_found).toBeNull()
+    expect(notFound).toBeNull()
   })
   test('multiple sites', () => {
     const site1 = {
@@ -70,7 +70,7 @@ describe('overwriteSite function', () => {
   describe('rewrite existed record', () => {
     test('test rewrite', () => {
       // test rewrite rules
-      const new_site = {
+      const newSite = {
         id: 1,
         uri_pattern: 'http://example.com',
         rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
@@ -82,7 +82,7 @@ describe('overwriteSite function', () => {
           rules: []
         }
       }
-      overwriteSite(new_site, sites)
+      overwriteSite(newSite, sites)
       expect(sites).toEqual({
         'http://example.com': {
           id: 1,
@@ -93,7 +93,7 @@ describe('overwriteSite function', () => {
     })
     test('single record 1', () => {
       // simple case with only one record in sites
-      const new_site = {
+      const newSite = {
         id: 1,
         uri_pattern: 'http://example2.com',
         rules: []
@@ -105,7 +105,7 @@ describe('overwriteSite function', () => {
           rules: []
         }
       }
-      overwriteSite(new_site, sites)
+      overwriteSite(newSite, sites)
       expect(sites).toEqual({
         'http://example2.com': {
           id: 1,
@@ -121,7 +121,7 @@ describe('overwriteSite function', () => {
         uri_pattern: 'http://example1.com',
         rules: []
       }
-      const new_site = {
+      const newSite = {
         id: 1,
         uri_pattern: 'http://example2.com',
         rules: []
@@ -168,7 +168,7 @@ describe('overwriteSite function', () => {
       })
     })
     test('test pattern collision', () => {
-      const new_site = {
+      const newSite = {
         id: 1,
         uri_pattern: 'http://example1.com',
         rules: []
@@ -181,18 +181,18 @@ describe('overwriteSite function', () => {
         }
       }
       expect(() => {
-        overwriteSite(new_site, sites)
+        overwriteSite(newSite, sites)
       }).toThrow('pattern already defined')
     })
   })
   test('test add', () => {
     // test rewrite rules
-    const new_site = {
+    const newSite = {
       uri_pattern: 'http://example.com',
       rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
     }
     const sites = {}
-    overwriteSite(new_site, sites)
+    overwriteSite(newSite, sites)
     expect(sites).toEqual({
       'http://example.com': {
         id: 1,
@@ -202,7 +202,7 @@ describe('overwriteSite function', () => {
     })
   })
   test('test add pattern collision', () => {
-    const new_site = {
+    const newSite = {
       uri_pattern: 'http://example1.com',
       rules: []
     }
@@ -214,7 +214,7 @@ describe('overwriteSite function', () => {
       }
     }
     expect(() => {
-      overwriteSite(new_site, sites)
+      overwriteSite(newSite, sites)
     }).toThrow('pattern already defined')
   })
 })

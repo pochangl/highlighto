@@ -11,7 +11,6 @@ import {
 } from '@mui/material'
 import type { PlasmoCreateShadowRoot, PlasmoCSConfig } from 'plasmo'
 import { useState } from 'react'
-import { flushSync } from 'react-dom'
 
 import type { PlasmoMessaging } from '@plasmohq/messaging'
 

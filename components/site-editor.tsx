@@ -56,9 +56,7 @@ export class SiteEditor extends Component<
   }
 
   removeRule(rule: IRule) {
-    console.log('removing', this.props.site.rules.length, rule)
     this.props.site.rules = this.props.site.rules.filter((r) => r !== rule)
-    console.log('removed', this.props.site.rules.length, rule)
     this.setState({ version: this.state.version + 1 })
   }
 

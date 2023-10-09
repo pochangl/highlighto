@@ -6,11 +6,11 @@ export interface IRule {
 
 export function highlight(options: { html: string; rules: IRule[] }) {
   let html = options.html
-  let regex = new RegExp(
+  const regex = new RegExp(
     options.rules.map((rule) => rule.pattern).join('|'),
     'gi'
   )
-  let map = Object.fromEntries(
+  const map = Object.fromEntries(
     new Map(
       options.rules.map((rule) => [
         rule.pattern.toLowerCase(),
@@ -23,7 +23,7 @@ export function highlight(options: { html: string; rules: IRule[] }) {
     let text = args1.at(-1).text
     // replace keywords
     text = text.replace(regex, function (matched) {
-      let color = map[matched.toLowerCase()]
+      const color = map[matched.toLowerCase()]
       return `<span class="_highlighto" style="background-color: ${color.background}; color: ${color.color}">${matched}</span>`
     })
     return `>${text}<`

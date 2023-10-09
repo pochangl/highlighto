@@ -1,6 +1,11 @@
 {
-  "extends": ["tslint-plugin-prettier"],
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-plugin-prettier"],
+  "jsRules": {},
   "rules": {
-    "prettier": true
-  }
+    "max-classes-per-file": false,
+    "no-unused-import": true
+  },
+  "exclude": ["node_modules"],
+  "rulesDirectory": []
 }

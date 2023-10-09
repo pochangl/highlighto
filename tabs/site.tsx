@@ -37,15 +37,15 @@ function IndexNewtab() {
   })
 
   flush = async () => {
-    const new_site = await retrieveSite(storage, site.id)
-    if (new_site) {
-      setSite(new_site)
+    const newSite = await retrieveSite(storage, site.id)
+    if (newSite) {
+      setSite(newSite)
     }
   }
 
   const [loaded, setLoaded] = useState(false)
   if (params.siteId && !loaded) {
-    const id = parseInt(params.siteId)
+    const id = parseInt(params.siteId, 10)
     retrieveSite(storage, id).then((site) => {
       if (site) {
         setLoaded(true)

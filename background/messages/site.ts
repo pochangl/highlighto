@@ -44,11 +44,11 @@ const handler: PlasmoMessaging.MessageHandler = async (
   if (!sites) {
     sites = await loadSites(storage)
   }
-  if (req.body.action == 'get') {
+  if (req.body.action === 'get') {
     const uri = req.body.uri
     const site = findSite(uri, sites)
-    return res.send({ errorCode: 0, site: site })
-  } else if (req.body.action == 'save') {
+    return res.send({ errorCode: 0, site })
+  } else if (req.body.action === 'save') {
     try {
       overwriteSite(req.body.site, sites)
       saveSites(storage, sites)
@@ -77,7 +77,6 @@ chrome.contextMenus.create({
 })
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  info.menuItemId
   const selection = info.selectionText
   const url = tab.url
 
