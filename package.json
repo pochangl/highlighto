@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "test": "plasmo test",
+    "test": "npm run jest & npm run lint",
     "jest": "jest",
     "debug": "jest --watch",
-    "lint": "prettier --check .",
+    "lint": "prettier --check **/*.{ts,js,json} --ignore-path .gitignore",
     "lintfix": "prettier --write **/*.{ts,js,json} --ignore-path .gitignore",
     "prepare": "husky install"
   },
