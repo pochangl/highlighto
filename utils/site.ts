@@ -64,3 +64,18 @@ export async function saveSites(storage: Storage, sites: ISites) {
   const sitesStr = JSON.stringify(listSites)
   await storage.set('sites', sitesStr)
 }
+
+export async function retrieveSite(
+  storage: Storage,
+  id: number
+): Promise<ISavedSite | null> {
+  const siteStr = (await storage.get('sites')) ?? '[]'
+  const sites: ISavedSite[] = JSON.parse(siteStr)
+
+  for (const site of sites) {
+    if (site.id === id) {
+      return site
+    }
+  }
+  return null
+}
