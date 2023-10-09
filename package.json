@@ -11,7 +11,8 @@
     "jest": "jest",
     "debug": "jest --watch",
     "lint": "prettier --check .",
-    "lintfix": "prettier --write **/*.{ts,js,json} --ignore-path .gitignore"
+    "lintfix": "prettier --write **/*.{ts,js,json} --ignore-path .gitignore",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
