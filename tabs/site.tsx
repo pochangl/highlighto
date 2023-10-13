@@ -49,7 +49,7 @@ function IndexNewtab() {
 
   const [loaded, setLoaded] = useState(false)
   if (params.siteId && !loaded) {
-    const id = parseInt(params.siteId, 10)
+    const id = params.siteId
     retrieveSite(storage, id).then((site) => {
       if (site) {
         setLoaded(true)

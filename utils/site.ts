@@ -1,32 +1,29 @@
 import type { Storage } from '@plasmohq/storage'
 
 import type { IColorSetting, IRule } from './highlight'
+import { getUid64 } from './uid'
 
 export interface ISiteRule extends IRule {
-  group: number | null
+  id: string
+  group: string
 }
 
 export interface IGroup extends IColorSetting {
   /** color groups */
-  id?: number
+  id: string
   name: string
 }
 
 export interface ISite {
-  id?: number
+  id: string
   name: string
   uri_pattern: string
   rules: ISiteRule[]
   groups: IGroup[]
 }
 
-export interface ISavedSite extends ISite {
-  id: number
-  groups: IGroup[]
-}
-
 export interface ISites {
-  [key: string]: ISavedSite
+  [key: string]: ISite
 }
 
 export function findSite(uri: string, sites: ISites): ISite | null {
@@ -53,38 +50,35 @@ export function overwriteSite(obj: ISite, sites: ISites) {
     for (const site of Object.values(sites)) {
       if (obj.id === site.id) {
         delete sites[site.uri_pattern]
-        sites[obj.uri_pattern] = obj as ISavedSite
-        break
+        sites[obj.uri_pattern] = obj
+        return
       }
     }
-  } else {
-    // new pattern
-    const max = Math.max(0, ...Object.values(sites).map((site) => site.id))
-    sites[obj.uri_pattern] = Object.assign({}, obj, { id: max + 1 })
+    sites[obj.uri_pattern] = obj
   }
 }
 
 export async function loadSites(storage: Storage) {
   const siteStr = (await storage.get('sites')) ?? '[]'
-  let listSites: ISavedSite[] = JSON.parse(siteStr)
-  listSites = listSites.map(buildSite<ISavedSite>)
+  let listSites: ISite[] = JSON.parse(siteStr)
+  listSites = listSites.map(buildSite<ISite>)
   return Object.fromEntries(
     new Map(listSites.map((site) => [site.uri_pattern, site]))
   )
 }
 
 export async function saveSites(storage: Storage, sites: ISites) {
-  const listSites: ISavedSite[] = Object.values(sites)
+  const listSites: ISite[] = Object.values(sites)
   const sitesStr = JSON.stringify(listSites)
   await storage.set('sites', sitesStr)
 }
 
 export async function retrieveSite(
   storage: Storage,
-  id: number
-): Promise<ISavedSite | null> {
+  id: string
+): Promise<ISite | null> {
   const siteStr = (await storage.get('sites')) ?? '[]'
-  const sites: ISavedSite[] = JSON.parse(siteStr)
+  const sites: ISite[] = JSON.parse(siteStr)
 
   for (const site of sites) {
     if (site.id === id) {
@@ -96,7 +90,8 @@ export async function retrieveSite(
 
 export function buildRule(options: Partial<ISiteRule>): ISiteRule {
   const defaultValue: ISiteRule = {
-    group: null,
+    id: getUid64(),
+    group: '',
     pattern: '',
     backgroundColor: 'blue',
     fontColor: 'white'
@@ -106,6 +101,7 @@ export function buildRule(options: Partial<ISiteRule>): ISiteRule {
 
 export function buildGroup(options: Partial<IGroup>): IGroup {
   const defaultValue: IGroup = {
+    id: getUid64(),
     name: '',
     backgroundColor: 'blue',
     fontColor: 'white'
@@ -118,12 +114,12 @@ export function buildSite<T extends Partial<ISite>>(options: T): T & ISite {
    * initialize site objects with default attributes
    */
   const defaultValue: ISite = {
+    id: getUid64(),
     name: '',
     uri_pattern: '',
     rules: [buildRule({})],
     groups: [
       buildGroup({
-        id: 1,
         name: 'default'
       })
     ]

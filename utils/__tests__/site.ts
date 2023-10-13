@@ -12,7 +12,7 @@ import {
 describe('findSites', () => {
   test('exact', () => {
     const site = buildSite({
-      id: 1,
+      id: '1',
       uri_pattern: 'http://example.com'
     })
     const found = findSite('http://example.com', { [site.uri_pattern]: site })
@@ -20,7 +20,7 @@ describe('findSites', () => {
   })
   test('not found', () => {
     const site = buildSite({
-      id: 1,
+      id: '1',
       uri_pattern: 'http://example.com1'
     })
     const found = findSite('http://example.com', { [site.uri_pattern]: site })
@@ -28,7 +28,7 @@ describe('findSites', () => {
   })
   test('prefix', () => {
     const site = buildSite({
-      id: 1,
+      id: '1',
       uri_pattern: 'http://example.com'
     })
     const found = findSite('http://example.com/path', {
@@ -38,7 +38,7 @@ describe('findSites', () => {
   })
   test('regex', () => {
     const site = buildSite({
-      id: 1,
+      id: '1',
       uri_pattern: '^http://example.com/[0-9]{2}/$'
     })
     const found = findSite('http://example.com/12/', {
@@ -52,11 +52,11 @@ describe('findSites', () => {
   })
   test('multiple sites', () => {
     const site1 = buildSite({
-      id: 1,
+      id: '1',
       uri_pattern: 'http://example1.com'
     })
     const site2 = buildSite({
-      id: 2,
+      id: '2',
       uri_pattern: 'http://example2.com'
     })
     const sites = { [site1.uri_pattern]: site1, [site2.uri_pattern]: site2 }
@@ -72,22 +72,24 @@ describe('overwriteSite function', () => {
     test('test rewrite', () => {
       // test rewrite rules
       const newSite = buildSite({
-        id: 1,
+        id: '1',
         uri_pattern: 'http://example.com',
         rules: [
           buildRule({ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' })
-        ]
+        ],
+        groups: []
       })
       const sites = {
         'http://example.com': buildSite({
-          id: 1,
-          uri_pattern: 'http://example.com'
+          id: '1',
+          uri_pattern: 'http://example.com',
+          groups: []
         })
       }
       overwriteSite(newSite, sites)
       expect(sites).toEqual({
         'http://example.com': buildSite({
-          id: 1,
+          id: '1',
           uri_pattern: 'http://example.com',
           rules: [
             buildRule({
@@ -95,27 +97,34 @@ describe('overwriteSite function', () => {
               backgroundColor: '1',
               fontColor: '0000FF'
             })
-          ]
+          ],
+          groups: []
         })
       })
     })
     test('single record 1', () => {
       // simple case with only one record in sites
       const newSite = buildSite({
-        id: 1,
-        uri_pattern: 'http://example2.com'
+        id: '1',
+        uri_pattern: 'http://example2.com',
+        rules: [],
+        groups: []
       })
       const sites = {
         'http://example1.com': buildSite({
-          id: 1,
-          uri_pattern: 'http://example1.com'
+          id: '1',
+          uri_pattern: 'http://example1.com',
+          rules: [],
+          groups: []
         })
       }
       overwriteSite(newSite, sites)
       expect(sites).toEqual({
         'http://example2.com': buildSite({
-          id: 1,
-          uri_pattern: 'http://example2.com'
+          id: '1',
+          uri_pattern: 'http://example2.com',
+          rules: [],
+          groups: []
         })
       })
     })
@@ -123,47 +132,59 @@ describe('overwriteSite function', () => {
       // simple case with multiple record in sites
       const sites = {
         'http://example1.com': buildSite({
-          id: 1,
-          uri_pattern: 'http://example1.com'
+          id: '1',
+          uri_pattern: 'http://example1.com',
+          rules: [],
+          groups: []
         }),
         'http://example2.com': buildSite({
-          id: 2,
-          uri_pattern: 'http://example2.com'
+          id: '2',
+          uri_pattern: 'http://example2.com',
+          rules: [],
+          groups: []
         })
       }
       overwriteSite(
         buildSite({
-          id: 1,
-          uri_pattern: 'http://example3.com'
+          id: '1',
+          uri_pattern: 'http://example3.com',
+          rules: [],
+          groups: []
         }),
         sites
       )
       overwriteSite(
         buildSite({
-          id: 2,
-          uri_pattern: 'http://example4.com'
+          id: '2',
+          uri_pattern: 'http://example4.com',
+          rules: [],
+          groups: []
         }),
         sites
       )
       expect(sites).toEqual({
         'http://example3.com': buildSite({
-          id: 1,
-          uri_pattern: 'http://example3.com'
+          id: '1',
+          uri_pattern: 'http://example3.com',
+          rules: [],
+          groups: []
         }),
         'http://example4.com': buildSite({
-          id: 2,
-          uri_pattern: 'http://example4.com'
+          id: '2',
+          uri_pattern: 'http://example4.com',
+          rules: [],
+          groups: []
         })
       })
     })
     test('test pattern collision', () => {
       const newSite = buildSite({
-        id: 1,
+        id: '1',
         uri_pattern: 'http://example1.com'
       })
       const sites = {
         'http://example1.com': buildSite({
-          id: 2,
+          id: '2',
           uri_pattern: 'http://example1.com'
         })
       }
@@ -177,24 +198,18 @@ describe('overwriteSite function', () => {
     const newSite = buildSite({
       uri_pattern: 'http://example.com',
       rules: [
-        buildRule({ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' })
+        buildRule({
+          id: '1',
+          pattern: 'a',
+          backgroundColor: '1',
+          fontColor: '0000FF'
+        })
       ]
     })
     const sites = {}
     overwriteSite(newSite, sites)
     expect(sites).toEqual({
-      'http://example.com': buildSite({
-        id: 1,
-        uri_pattern: 'http://example.com',
-        rules: [
-          {
-            pattern: 'a',
-            backgroundColor: '1',
-            fontColor: '0000FF',
-            group: null
-          }
-        ]
-      })
+      'http://example.com': newSite
     })
   })
   test('test add pattern collision', () => {
@@ -203,7 +218,7 @@ describe('overwriteSite function', () => {
     })
     const sites = {
       'http://example1.com': buildSite({
-        id: 1,
+        id: '1',
         uri_pattern: 'http://example1.com'
       })
     }
@@ -219,7 +234,7 @@ describe('overwriteSite function', () => {
         fontColor: 'white'
       })
       const group = buildGroup({
-        id: 1,
+        id: '1',
         fontColor: 'red'
       })
       const rules = getRules([group], [rule])
@@ -227,11 +242,11 @@ describe('overwriteSite function', () => {
     })
     test('with group', () => {
       const rule = buildRule({
-        group: 1,
+        group: '1',
         fontColor: 'white'
       })
       const group = buildGroup({
-        id: 1,
+        id: '1',
         fontColor: 'red'
       })
       const rules = getRules([group], [rule])
