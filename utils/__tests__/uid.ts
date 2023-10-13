@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { toBase64 } from '~utils/uid'
+import { getUid, toBase64 } from '~utils/uid'
 
 describe('toBase64', () => {
   test('0', () => {
@@ -20,5 +20,23 @@ describe('toBase64', () => {
   })
   test('1697198134084000', () => {
     expect(toBase64(1697198134084000)).toEqual('GB5e75UGg')
+  })
+})
+
+describe('getUid', () => {
+  test('version increment', () => {
+    const version1 = getUid() % 100
+    const version2 = getUid() % 100
+    expect(version2).toEqual(version1 + 1)
+  })
+  test('precision', () => {
+    // if integer is too big, like (new Date().getTime() * 10000, it loses its precision
+    let prev: number
+    let current = getUid() % 100
+    do {
+      prev = current
+      current = getUid() % 100
+      expect(prev).toEqual((current + 99) % 100)
+    } while (current != 0)
   })
 })

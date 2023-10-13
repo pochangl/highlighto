@@ -14,8 +14,11 @@ export function toBase64(num: number): string {
   return remainders.map((index) => BASE64_LETTERS.at(index)).join('')
 }
 
-function getUid(): number {
-  return new Date().getTime() * 10000 + version
+export function getUid(): number {
+  version = version + 1
+  const timestamp = new Date().getTime()
+  const uid = timestamp * 100 + version
+  return uid
 }
 
 export function getUid64(): string {
