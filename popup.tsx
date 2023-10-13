@@ -47,7 +47,10 @@ class Popup extends Component<{}, { site: ISite | null; ready: boolean }> {
 
   async addNew() {
     const tab = await getActiveTab()
-    gotoTab<ISitePageArgument>('site.html', { uri_pattern: tab.url })
+    gotoTab<ISitePageArgument>('site.html', {
+      uri_pattern: tab.url,
+      name: tab.title
+    })
   }
 
   render() {

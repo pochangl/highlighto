@@ -10,6 +10,7 @@ import '~assets/material-icons-font.css'
 export interface ISitePageArgument {
   siteId?: string
   uri_pattern?: string
+  name?: string
 }
 
 function getParams<T>() {
@@ -33,7 +34,8 @@ function IndexNewtab() {
   const params = getParams<ISitePageArgument>()
   const [site, setSite] = useState<ISite>({
     uri_pattern: params.uri_pattern,
-    rules: []
+    rules: [],
+    name: params.name
   })
 
   flush = async () => {
