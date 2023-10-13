@@ -1,9 +1,21 @@
 import { Button, Card, CardContent, Grid, Icon, TextField } from '@mui/material'
-import { Component } from 'react'
+import { Component, useState } from 'react'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
 import { buildRule, IGroup, type ISite } from '~utils/site'
+
+function useUpdater() {
+  const [version, setVersion] = useState(1)
+  function setState<T>(func: (event: T) => void | Promise<void>) {
+    async function wrapper(event: T) {
+      await func(event)
+      setVersion(version + 1)
+    }
+    return wrapper
+  }
+  return setState
+}
 
 function RuleEditor({
   rule,
@@ -12,6 +24,7 @@ function RuleEditor({
   rule: IRule
   onRemove?: (rule: IRule) => void
 }) {
+  const update = useUpdater()
   return (
     <Grid container columnGap={3}>
       <TextField
@@ -24,24 +37,26 @@ function RuleEditor({
       <TextField
         defaultValue={rule.backgroundColor}
         label="Background color"
-        onChange={(event) => {
+        onChange={update((event) => {
           rule.backgroundColor = event.target.value
-        }}
+        })}
       />
       <TextField
         defaultValue={rule.fontColor}
         label="Font color"
-        onChange={(event) => {
+        onChange={update((event) => {
           rule.fontColor = event.target.value
-        }}
+        })}
       />
-      <span
-        style={{
-          color: rule.fontColor,
-          backgroundColor: rule.backgroundColor
-        }}>
-        Example
-      </span>
+      <Grid item>
+        <span
+          style={{
+            color: rule.fontColor,
+            backgroundColor: rule.backgroundColor
+          }}>
+          Example
+        </span>
+      </Grid>
       {onRemove && (
         <Button onClick={() => onRemove(rule)}>
           <Icon> delete </Icon>
@@ -58,6 +73,7 @@ function GroupEditor({
   group: IGroup
   onRemove?: (group: IGroup) => void
 }) {
+  const update = useUpdater()
   return (
     <Grid container columnGap={3}>
       <TextField
@@ -70,24 +86,26 @@ function GroupEditor({
       <TextField
         defaultValue={group.backgroundColor}
         label="Background color"
-        onChange={(event) => {
+        onChange={update((event) => {
           group.backgroundColor = event.target.value
-        }}
+        })}
       />
       <TextField
         defaultValue={group.fontColor}
         label="font color"
-        onChange={(event) => {
+        onChange={update((event) => {
           group.fontColor = event.target.value
-        }}
+        })}
       />
-      <span
-        style={{
-          color: group.fontColor,
-          backgroundColor: group.backgroundColor
-        }}>
-        Example
-      </span>
+      <Grid item>
+        <span
+          style={{
+            color: group.fontColor,
+            backgroundColor: group.backgroundColor
+          }}>
+          Example
+        </span>
+      </Grid>
       {onRemove && (
         <Button onClick={() => onRemove(group)}>
           <Icon> delete </Icon>
