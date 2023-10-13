@@ -1,9 +1,19 @@
-import { Button, Card, CardContent, Grid, Icon, TextField } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Icon,
+  MenuItem,
+  Select,
+  TextField
+} from '@mui/material'
 import { Component, useState } from 'react'
+import { group } from 'console'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
-import { buildRule, IGroup, type ISite } from '~utils/site'
+import { buildRule, getRules, IGroup, ISiteRule, type ISite } from '~utils/site'
 
 function useUpdater() {
   const [version, setVersion] = useState(1)
@@ -19,12 +29,15 @@ function useUpdater() {
 
 function RuleEditor({
   rule,
+  groups,
   onRemove
 }: {
-  rule: IRule
-  onRemove?: (rule: IRule) => void
+  rule: ISiteRule
+  groups: IGroup[]
+  onRemove?: (rule: ISiteRule) => void
 }) {
   const update = useUpdater()
+  const appliedRule = getRules(groups, [rule])[0]
   return (
     <Grid container columnGap={3}>
       <TextField
@@ -48,11 +61,26 @@ function RuleEditor({
           rule.fontColor = event.target.value
         })}
       />
+      <Select
+        value={rule.group || ''}
+        style={{ width: '100px' }}
+        onChange={update((event) => {
+          rule.group = event.target.value || ''
+        })}>
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {groups.map((group) => (
+          <MenuItem value={group.id} key={group.id}>
+            {group.name}
+          </MenuItem>
+        ))}
+      </Select>
       <Grid item>
         <span
           style={{
-            color: rule.fontColor,
-            backgroundColor: rule.backgroundColor
+            color: appliedRule.fontColor,
+            backgroundColor: appliedRule.backgroundColor
           }}>
           Example
         </span>
@@ -176,6 +204,7 @@ export class SiteEditor extends Component<
           <RuleEditor
             key={rule.pattern + index}
             rule={rule}
+            groups={this.props.site.groups}
             onRemove={(r) => this.removeRule(r)}
           />
         ))}
@@ -219,7 +248,10 @@ export class SingleRuleEditor extends Component<
                 (this.props.site.uri_pattern = event.target.value)
               }
             />
-            <RuleEditor rule={this.props.rule} />
+            <RuleEditor
+              rule={this.props.rule}
+              groups={this.props.site.groups}
+            />
           </Grid>
         </CardContent>
       </Card>
