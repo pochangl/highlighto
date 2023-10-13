@@ -18,7 +18,7 @@ import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
 import { guessSite, saveSite } from '~utils/api'
 import { highlight, type IRule } from '~utils/highlight'
-import type { ISite } from '~utils/site'
+import { buildSite, type ISite } from '~utils/site'
 
 const styleElement = document.createElement('style')
 
@@ -65,10 +65,11 @@ let onSelection: (item: IMenuEvent) => void
 
 const Content = () => {
   const [selected, setSelect] = useState(false)
-  const [site, setSite] = useState<ISite>({
-    uri_pattern: window.location.href,
-    rules: []
-  })
+  const [site, setSite] = useState<ISite>(
+    buildSite({
+      uri_pattern: window.location.href
+    })
+  )
   const [rule, setRule] = useState<IRule>({
     pattern: '',
     fontColor: 'white',

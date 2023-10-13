@@ -1,43 +1,39 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { findSite, overwriteSite } from '~utils/site'
+import { buildSite, findSite, ISavedSite, overwriteSite } from '~utils/site'
 
 describe('findSites', () => {
   test('exact', () => {
-    const site = {
+    const site = buildSite({
       id: 1,
-      uri_pattern: 'http://example.com',
-      rules: []
-    }
+      uri_pattern: 'http://example.com'
+    })
     const found = findSite('http://example.com', { [site.uri_pattern]: site })
     expect(found).toBe(site)
   })
   test('not found', () => {
-    const site = {
+    const site = buildSite({
       id: 1,
-      uri_pattern: 'http://example.com1',
-      rules: []
-    }
+      uri_pattern: 'http://example.com1'
+    })
     const found = findSite('http://example.com', { [site.uri_pattern]: site })
     expect(found).toBeNull()
   })
   test('prefix', () => {
-    const site = {
+    const site = buildSite({
       id: 1,
-      uri_pattern: 'http://example.com',
-      rules: []
-    }
+      uri_pattern: 'http://example.com'
+    })
     const found = findSite('http://example.com/path', {
       [site.uri_pattern]: site
     })
     expect(found).toBe(site)
   })
   test('regex', () => {
-    const site = {
+    const site = buildSite({
       id: 1,
-      uri_pattern: '^http://example.com/[0-9]{2}/$',
-      rules: []
-    }
+      uri_pattern: '^http://example.com/[0-9]{2}/$'
+    })
     const found = findSite('http://example.com/12/', {
       [site.uri_pattern]: site
     })
@@ -48,16 +44,14 @@ describe('findSites', () => {
     expect(notFound).toBeNull()
   })
   test('multiple sites', () => {
-    const site1 = {
+    const site1 = buildSite({
       id: 1,
-      uri_pattern: 'http://example1.com',
-      rules: []
-    }
-    const site2 = {
+      uri_pattern: 'http://example1.com'
+    })
+    const site2 = buildSite({
       id: 2,
-      uri_pattern: 'http://example2.com',
-      rules: []
-    }
+      uri_pattern: 'http://example2.com'
+    })
     const sites = { [site1.uri_pattern]: site1, [site2.uri_pattern]: site2 }
     const found1 = findSite('http://example1.com', sites)
     expect(found1).toBe(site1)
@@ -70,115 +64,93 @@ describe('overwriteSite function', () => {
   describe('rewrite existed record', () => {
     test('test rewrite', () => {
       // test rewrite rules
-      const newSite = {
+      const newSite = buildSite({
         id: 1,
         uri_pattern: 'http://example.com',
         rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
-      }
+      })
       const sites = {
-        'http://example.com': {
+        'http://example.com': buildSite({
           id: 1,
-          uri_pattern: 'http://example.com',
-          rules: []
-        }
+          uri_pattern: 'http://example.com'
+        })
       }
       overwriteSite(newSite, sites)
       expect(sites).toEqual({
-        'http://example.com': {
+        'http://example.com': buildSite({
           id: 1,
           uri_pattern: 'http://example.com',
           rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
-        }
+        })
       })
     })
     test('single record 1', () => {
       // simple case with only one record in sites
-      const newSite = {
+      const newSite = buildSite({
         id: 1,
-        uri_pattern: 'http://example2.com',
-        rules: []
-      }
+        uri_pattern: 'http://example2.com'
+      })
       const sites = {
-        'http://example1.com': {
+        'http://example1.com': buildSite({
           id: 1,
-          uri_pattern: 'http://example1.com',
-          rules: []
-        }
+          uri_pattern: 'http://example1.com'
+        })
       }
       overwriteSite(newSite, sites)
       expect(sites).toEqual({
-        'http://example2.com': {
+        'http://example2.com': buildSite({
           id: 1,
-          uri_pattern: 'http://example2.com',
-          rules: []
-        }
+          uri_pattern: 'http://example2.com'
+        })
       })
     })
     test('single record 2', () => {
       // simple case with multiple record in sites
-      const site = {
-        id: 1,
-        uri_pattern: 'http://example1.com',
-        rules: []
-      }
-      const newSite = {
-        id: 1,
-        uri_pattern: 'http://example2.com',
-        rules: []
-      }
       const sites = {
-        'http://example1.com': {
+        'http://example1.com': buildSite({
           id: 1,
-          uri_pattern: 'http://example1.com',
-          rules: []
-        },
-        'http://example2.com': {
+          uri_pattern: 'http://example1.com'
+        }),
+        'http://example2.com': buildSite({
           id: 2,
-          uri_pattern: 'http://example2.com',
-          rules: []
-        }
+          uri_pattern: 'http://example2.com'
+        })
       }
       overwriteSite(
-        {
+        buildSite({
           id: 1,
-          uri_pattern: 'http://example3.com',
-          rules: []
-        },
+          uri_pattern: 'http://example3.com'
+        }),
         sites
       )
       overwriteSite(
-        {
+        buildSite({
           id: 2,
-          uri_pattern: 'http://example4.com',
-          rules: []
-        },
+          uri_pattern: 'http://example4.com'
+        }),
         sites
       )
       expect(sites).toEqual({
-        'http://example3.com': {
+        'http://example3.com': buildSite({
           id: 1,
-          uri_pattern: 'http://example3.com',
-          rules: []
-        },
-        'http://example4.com': {
+          uri_pattern: 'http://example3.com'
+        }),
+        'http://example4.com': buildSite({
           id: 2,
-          uri_pattern: 'http://example4.com',
-          rules: []
-        }
+          uri_pattern: 'http://example4.com'
+        })
       })
     })
     test('test pattern collision', () => {
-      const newSite = {
+      const newSite = buildSite({
         id: 1,
-        uri_pattern: 'http://example1.com',
-        rules: []
-      }
+        uri_pattern: 'http://example1.com'
+      })
       const sites = {
-        'http://example1.com': {
+        'http://example1.com': buildSite({
           id: 2,
-          uri_pattern: 'http://example1.com',
-          rules: []
-        }
+          uri_pattern: 'http://example1.com'
+        })
       }
       expect(() => {
         overwriteSite(newSite, sites)
@@ -187,31 +159,29 @@ describe('overwriteSite function', () => {
   })
   test('test add', () => {
     // test rewrite rules
-    const newSite = {
+    const newSite = buildSite({
       uri_pattern: 'http://example.com',
       rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
-    }
+    })
     const sites = {}
     overwriteSite(newSite, sites)
     expect(sites).toEqual({
-      'http://example.com': {
+      'http://example.com': buildSite({
         id: 1,
         uri_pattern: 'http://example.com',
         rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
-      }
+      })
     })
   })
   test('test add pattern collision', () => {
-    const newSite = {
-      uri_pattern: 'http://example1.com',
-      rules: []
-    }
+    const newSite = buildSite({
+      uri_pattern: 'http://example1.com'
+    })
     const sites = {
-      'http://example1.com': {
+      'http://example1.com': buildSite({
         id: 1,
-        uri_pattern: 'http://example1.com',
-        rules: []
-      }
+        uri_pattern: 'http://example1.com'
+      })
     }
     expect(() => {
       overwriteSite(newSite, sites)

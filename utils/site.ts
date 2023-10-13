@@ -4,14 +4,13 @@ import type { IRule } from './highlight'
 
 export interface ISite {
   id?: number
-  name?: string
+  name: string
   uri_pattern: string
   rules: IRule[]
 }
 
 export interface ISavedSite extends ISite {
   id: number
-  name: string
 }
 
 export interface ISites {
@@ -55,7 +54,8 @@ export function overwriteSite(obj: ISite, sites: ISites) {
 
 export async function loadSites(storage: Storage) {
   const siteStr = (await storage.get('sites')) ?? '[]'
-  const listSites: ISavedSite[] = JSON.parse(siteStr)
+  let listSites: ISavedSite[] = JSON.parse(siteStr)
+  listSites = listSites.map(buildSite<ISavedSite>)
   return Object.fromEntries(
     new Map(listSites.map((site) => [site.uri_pattern, site]))
   )
@@ -80,4 +80,22 @@ export async function retrieveSite(
     }
   }
   return null
+}
+
+export function buildSite<T>(options: T): T & ISite {
+  /**
+   * initialize site objects with default attributes
+   */
+  const defaultValue: ISite = {
+    name: '',
+    uri_pattern: '',
+    rules: [
+      {
+        pattern: '',
+        backgroundColor: '#FF0000',
+        fontColor: '#0000FF'
+      }
+    ]
+  }
+  return Object.assign(defaultValue, options)
 }
