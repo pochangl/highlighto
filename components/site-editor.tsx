@@ -23,18 +23,25 @@ function RuleEditor({
       />
       <TextField
         defaultValue={rule.backgroundColor}
-        label="Color"
+        label="Background color"
         onChange={(event) => {
           rule.backgroundColor = event.target.value
         }}
       />
       <TextField
         defaultValue={rule.fontColor}
-        label="Color"
+        label="Font color"
         onChange={(event) => {
           rule.fontColor = event.target.value
         }}
       />
+      <span
+        style={{
+          color: rule.fontColor,
+          backgroundColor: rule.backgroundColor
+        }}>
+        Example
+      </span>
       {onRemove && (
         <Button onClick={() => onRemove(rule)}>
           <Icon> delete </Icon>
@@ -62,18 +69,25 @@ function GroupEditor({
       />
       <TextField
         defaultValue={group.backgroundColor}
-        label="Color"
+        label="Background color"
         onChange={(event) => {
           group.backgroundColor = event.target.value
         }}
       />
       <TextField
         defaultValue={group.fontColor}
-        label="Color"
+        label="font color"
         onChange={(event) => {
           group.fontColor = event.target.value
         }}
       />
+      <span
+        style={{
+          color: group.fontColor,
+          backgroundColor: group.backgroundColor
+        }}>
+        Example
+      </span>
       {onRemove && (
         <Button onClick={() => onRemove(group)}>
           <Icon> delete </Icon>
