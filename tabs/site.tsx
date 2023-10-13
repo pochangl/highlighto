@@ -7,11 +7,14 @@ import { buildRule, buildSite, retrieveSite, type ISite } from '~utils/site'
 
 import '~assets/material-icons-font.css'
 
-export interface ISitePageArgument {
-  siteId?: string
-  uri_pattern?: string
-  name?: string
-}
+export type ISitePageArgument =
+  | {
+      id: string
+    }
+  | {
+      uri_pattern: string
+      name: string
+    }
 
 function getParams<T>() {
   const url = new URL(window.location.href)
@@ -31,7 +34,8 @@ storage.watch({
 let flush: () => void
 
 function IndexNewtab() {
-  const params = getParams<ISitePageArgument>()
+  const params: { id?: string; name?: string; uri_pattern?: string } =
+    getParams<ISitePageArgument>()
   const [site, setSite] = useState<ISite>(
     buildSite({
       uri_pattern: params.uri_pattern,
@@ -48,8 +52,8 @@ function IndexNewtab() {
   }
 
   const [loaded, setLoaded] = useState(false)
-  if (params.siteId && !loaded) {
-    const id = params.siteId
+  if (params.id && !loaded) {
+    const id = params.id
     retrieveSite(storage, id).then((site) => {
       if (site) {
         setLoaded(true)

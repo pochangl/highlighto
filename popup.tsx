@@ -41,7 +41,7 @@ class Popup extends Component<{}, { site: ISite | null; ready: boolean }> {
       ready: true
     })
     if (site) {
-      gotoTab<ISitePageArgument>('site.html', { siteId: site.id.toString() })
+      gotoTab<ISitePageArgument>('site.html', { id: site.id.toString() })
     }
   }
 
