@@ -63,6 +63,12 @@ export class SiteEditor extends Component<
   render() {
     return (
       <Grid container direction="column" rowGap={3}>
+        <Grid container direction="row">
+          <Button href={new URL('./sites.html', location.href).href}>
+            <Icon>arrow_back</Icon>
+          </Button>
+        </Grid>
+
         <TextField
           label="name"
           style={{ width: '60%' }}
