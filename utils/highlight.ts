@@ -1,6 +1,9 @@
-export interface IRule {
+export interface IColorSetting {
   backgroundColor: string
   fontColor: string
+}
+
+export interface IRule extends IColorSetting {
   pattern: string
 }
 

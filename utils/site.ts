@@ -1,16 +1,28 @@
 import type { Storage } from '@plasmohq/storage'
 
-import type { IRule } from './highlight'
+import type { IColorSetting, IRule } from './highlight'
+
+export interface ISiteRule extends IRule {
+  group: number | null
+}
+
+export interface IGroup extends IColorSetting {
+  /** color groups */
+  id?: number
+  name: string
+}
 
 export interface ISite {
   id?: number
   name: string
   uri_pattern: string
-  rules: IRule[]
+  rules: ISiteRule[]
+  groups: IGroup[]
 }
 
 export interface ISavedSite extends ISite {
   id: number
+  groups: IGroup[]
 }
 
 export interface ISites {
@@ -82,20 +94,58 @@ export async function retrieveSite(
   return null
 }
 
-export function buildSite<T>(options: T): T & ISite {
+export function buildRule(options: Partial<ISiteRule>): ISiteRule {
+  const defaultValue: ISiteRule = {
+    group: null,
+    pattern: '',
+    backgroundColor: 'blue',
+    fontColor: 'white'
+  }
+  return Object.assign({}, defaultValue, options)
+}
+
+export function buildGroup(options: Partial<IGroup>): IGroup {
+  const defaultValue: IGroup = {
+    name: '',
+    backgroundColor: 'blue',
+    fontColor: 'white'
+  }
+  return Object.assign({}, defaultValue, options)
+}
+
+export function buildSite<T extends Partial<ISite>>(options: T): T & ISite {
   /**
    * initialize site objects with default attributes
    */
   const defaultValue: ISite = {
     name: '',
     uri_pattern: '',
-    rules: [
-      {
-        pattern: '',
-        backgroundColor: '#FF0000',
-        fontColor: '#0000FF'
-      }
+    rules: [buildRule({})],
+    groups: [
+      buildGroup({
+        id: 1,
+        name: 'default'
+      })
     ]
   }
   return Object.assign(defaultValue, options)
+}
+
+export function getRules(
+  groups: Readonly<IGroup>[],
+  rules: Readonly<ISiteRule>[]
+): Readonly<IRule>[] {
+  const groupMap = new Map(groups.map((group) => [group.id, group]))
+  return rules.map((rule) => {
+    const group = groupMap.get(rule.group)
+    if (group) {
+      const color: IColorSetting = {
+        fontColor: group.fontColor,
+        backgroundColor: group.backgroundColor
+      }
+      return Object.assign({}, rule, color)
+    } else {
+      return rule
+    }
+  })
 }

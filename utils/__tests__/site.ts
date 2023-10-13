@@ -1,6 +1,13 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { buildSite, findSite, ISavedSite, overwriteSite } from '~utils/site'
+import {
+  buildGroup,
+  buildRule,
+  buildSite,
+  findSite,
+  getRules,
+  overwriteSite
+} from '~utils/site'
 
 describe('findSites', () => {
   test('exact', () => {
@@ -67,7 +74,9 @@ describe('overwriteSite function', () => {
       const newSite = buildSite({
         id: 1,
         uri_pattern: 'http://example.com',
-        rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
+        rules: [
+          buildRule({ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' })
+        ]
       })
       const sites = {
         'http://example.com': buildSite({
@@ -80,7 +89,13 @@ describe('overwriteSite function', () => {
         'http://example.com': buildSite({
           id: 1,
           uri_pattern: 'http://example.com',
-          rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
+          rules: [
+            buildRule({
+              pattern: 'a',
+              backgroundColor: '1',
+              fontColor: '0000FF'
+            })
+          ]
         })
       })
     })
@@ -161,7 +176,9 @@ describe('overwriteSite function', () => {
     // test rewrite rules
     const newSite = buildSite({
       uri_pattern: 'http://example.com',
-      rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
+      rules: [
+        buildRule({ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' })
+      ]
     })
     const sites = {}
     overwriteSite(newSite, sites)
@@ -169,7 +186,14 @@ describe('overwriteSite function', () => {
       'http://example.com': buildSite({
         id: 1,
         uri_pattern: 'http://example.com',
-        rules: [{ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' }]
+        rules: [
+          {
+            pattern: 'a',
+            backgroundColor: '1',
+            fontColor: '0000FF',
+            group: null
+          }
+        ]
       })
     })
   })
@@ -186,5 +210,33 @@ describe('overwriteSite function', () => {
     expect(() => {
       overwriteSite(newSite, sites)
     }).toThrow('pattern already defined')
+  })
+
+  describe('buildRules', () => {
+    test('no group', () => {
+      const rule = buildRule({
+        group: null,
+        fontColor: 'white'
+      })
+      const group = buildGroup({
+        id: 1,
+        fontColor: 'red'
+      })
+      const rules = getRules([group], [rule])
+      expect(rules).toEqual([rule])
+    })
+    test('with group', () => {
+      const rule = buildRule({
+        group: 1,
+        fontColor: 'white'
+      })
+      const group = buildGroup({
+        id: 1,
+        fontColor: 'red'
+      })
+      const rules = getRules([group], [rule])
+
+      expect(rules).toEqual([Object.assign({}, rule, { fontColor: 'red' })])
+    })
   })
 })
