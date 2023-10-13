@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { getUid, toBase64 } from '~utils/uid'
+import { getUid, getUid64, toBase64 } from '~utils/uid'
 
 describe('toBase64', () => {
   test('0', () => {
@@ -52,5 +52,11 @@ describe('getUid', () => {
     const uids = new Array(buckets * 10).fill(0).map(getUid)
     const diff = Number(uids[uids.length - 1] - uids[0])
     expect(diff).toBeGreaterThan(buckets * 30)
+  })
+
+  describe('getUid', () => {
+    test('uid length', () => {
+      expect(getUid64().length).toEqual(10)
+    })
   })
 })
