@@ -34,7 +34,13 @@ function IndexNewtab() {
   const params = getParams<ISitePageArgument>()
   const [site, setSite] = useState<ISite>({
     uri_pattern: params.uri_pattern,
-    rules: [],
+    rules: [
+      {
+        pattern: '',
+        backgroundColor: '#FF0000',
+        fontColor: '#0000FF'
+      }
+    ],
     name: params.name
   })
 
