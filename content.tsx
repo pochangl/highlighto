@@ -106,6 +106,11 @@ const Content = () => {
         defaultProps: {
           container: shadowRoot.children['plasmo-shadow-container']
         }
+      },
+      MuiSelect: {
+        defaultProps: {
+          container: shadowRoot.children['plasmo-shadow-container']
+        }
       }
     }
   })
