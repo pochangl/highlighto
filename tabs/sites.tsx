@@ -20,6 +20,12 @@ storage.watch({
 
 let flush: () => Promise<void>
 
+function siteHref(site: ISite) {
+  const uri = new URL('./site.html', location.toString())
+  uri.searchParams.append('siteId', site.id)
+  return uri.toString()
+}
+
 function SitesEditor(options: {
   sites: ISites
   onDelete: (site: ISite) => void
@@ -37,6 +43,9 @@ function SitesEditor(options: {
           <Grid item xs={3}>
             <Button onClick={() => options.onDelete(site)}>
               <Icon>delete</Icon>
+            </Button>
+            <Button href={siteHref(site)}>
+              <Icon>edit</Icon>
             </Button>
           </Grid>
         </Grid>
@@ -73,7 +82,6 @@ function SitesTab() {
       }
     }
     await saveSites(storage, newSites)
-    console.log(sites, site)
   }
 
   return (
