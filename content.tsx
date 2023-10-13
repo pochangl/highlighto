@@ -17,8 +17,8 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
 import { guessSite, saveSite } from '~utils/api'
-import { highlight, type IRule } from '~utils/highlight'
-import { buildSite, type ISite } from '~utils/site'
+import { highlight } from '~utils/highlight'
+import { buildSite, getRules, type ISite, type ISiteRule } from '~utils/site'
 
 const styleElement = document.createElement('style')
 
@@ -42,7 +42,7 @@ function flushKeywords(site: ISite) {
   }
   document.body.innerHTML = highlight({
     html: cachedHtml,
-    rules: site.rules
+    rules: getRules(site.groups, site.rules)
   })
 }
 
@@ -70,10 +70,11 @@ const Content = () => {
       uri_pattern: window.location.href
     })
   )
-  const [rule, setRule] = useState<IRule>({
+  const [rule, setRule] = useState<ISiteRule>({
     pattern: '',
     fontColor: 'white',
-    backgroundColor: 'blue'
+    backgroundColor: 'blue',
+    group: null
   })
   onSelection = async (event) => {
     const site = await guessSite(window.location.href)
@@ -86,7 +87,7 @@ const Content = () => {
     })
     setSelect(true)
   }
-  async function onSave(rule: IRule) {
+  async function onSave(rule: ISiteRule) {
     site.rules.push(rule)
     await saveSite(site)
 

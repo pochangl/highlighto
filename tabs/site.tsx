@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Storage } from '@plasmohq/storage'
 
 import { SiteEditor } from '~components/site-editor'
-import { retrieveSite, type ISite } from '~utils/site'
+import { buildRule, buildSite, retrieveSite, type ISite } from '~utils/site'
 
 import '~assets/material-icons-font.css'
 
@@ -32,17 +32,13 @@ let flush: () => void
 
 function IndexNewtab() {
   const params = getParams<ISitePageArgument>()
-  const [site, setSite] = useState<ISite>({
-    uri_pattern: params.uri_pattern,
-    rules: [
-      {
-        pattern: '',
-        backgroundColor: '#FF0000',
-        fontColor: '#0000FF'
-      }
-    ],
-    name: params.name
-  })
+  const [site, setSite] = useState<ISite>(
+    buildSite({
+      uri_pattern: params.uri_pattern,
+      rules: [buildRule({})],
+      name: params.name
+    })
+  )
 
   flush = async () => {
     const newSite = await retrieveSite(storage, site.id)

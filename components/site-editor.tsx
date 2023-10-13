@@ -3,7 +3,7 @@ import { Component } from 'react'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
-import type { ISite } from '~utils/site'
+import { buildRule, type ISite } from '~utils/site'
 
 function RuleEditor({
   rule,
@@ -88,11 +88,13 @@ export class SiteEditor extends Component<
         ))}
         <Button
           onClick={() => {
-            this.props.site.rules.push({
-              pattern: '',
-              backgroundColor: 'blue',
-              fontColor: 'white'
-            })
+            this.props.site.rules.push(
+              buildRule({
+                pattern: '',
+                backgroundColor: 'blue',
+                fontColor: 'white'
+              })
+            )
             this.setState({ version: this.state.version + 1 })
           }}
           variant="contained">
