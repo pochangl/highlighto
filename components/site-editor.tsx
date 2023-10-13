@@ -3,7 +3,7 @@ import { Component } from 'react'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
-import { buildRule, type ISite } from '~utils/site'
+import { buildRule, IGroup, type ISite } from '~utils/site'
 
 function RuleEditor({
   rule,
@@ -43,6 +43,46 @@ function RuleEditor({
     </Grid>
   )
 }
+
+function GroupEditor({
+  group,
+  onRemove
+}: {
+  group: IGroup
+  onRemove?: (group: IGroup) => void
+}) {
+  return (
+    <Grid container columnGap={3}>
+      <TextField
+        defaultValue={group.name}
+        label="name"
+        onChange={(event) => {
+          group.name = event.target.value
+        }}
+      />
+      <TextField
+        defaultValue={group.backgroundColor}
+        label="Color"
+        onChange={(event) => {
+          group.backgroundColor = event.target.value
+        }}
+      />
+      <TextField
+        defaultValue={group.fontColor}
+        label="Color"
+        onChange={(event) => {
+          group.fontColor = event.target.value
+        }}
+      />
+      {onRemove && (
+        <Button onClick={() => onRemove(group)}>
+          <Icon> delete </Icon>
+        </Button>
+      )}
+    </Grid>
+  )
+}
+
 export class SiteEditor extends Component<
   { site: ISite },
   { version: number }
@@ -51,12 +91,18 @@ export class SiteEditor extends Component<
     super(props)
     this.state = { version: 1 }
   }
+
   save() {
     return saveSite(this.props.site)
   }
 
   removeRule(rule: IRule) {
     this.props.site.rules = this.props.site.rules.filter((r) => r !== rule)
+    this.setState({ version: this.state.version + 1 })
+  }
+
+  removeGroup(group: IGroup) {
+    this.props.site.groups = this.props.site.groups.filter((r) => r !== group)
     this.setState({ version: this.state.version + 1 })
   }
 
@@ -77,7 +123,7 @@ export class SiteEditor extends Component<
             this.props.site.name = event.target.value
           }}
         />
-        <div>uri pattern:</div>
+        <p>uri pattern:</p>
         <TextField
           style={{ width: '100%' }}
           defaultValue={this.props.site.uri_pattern}
@@ -85,6 +131,15 @@ export class SiteEditor extends Component<
             (this.props.site.uri_pattern = event.target.value)
           }
         />
+        <p> groups: </p>
+        {this.props.site.groups.map((group, index) => (
+          <GroupEditor
+            key={group.id + index}
+            group={group}
+            onRemove={(r) => this.removeGroup(r)}
+          />
+        ))}
+        <p> rules: </p>
         {this.props.site.rules.map((rule, index) => (
           <RuleEditor
             key={rule.pattern + index}
