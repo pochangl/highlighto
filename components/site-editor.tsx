@@ -63,6 +63,14 @@ export class SiteEditor extends Component<
   render() {
     return (
       <Grid container direction="column" rowGap={3}>
+        <TextField
+          label="name"
+          style={{ width: '60%' }}
+          defaultValue={this.props.site.name}
+          onChange={(event) => {
+            this.props.site.name = event.target.value
+          }}
+        />
         <div>uri pattern:</div>
         <TextField
           style={{ width: '100%' }}

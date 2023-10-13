@@ -4,12 +4,14 @@ import type { IRule } from './highlight'
 
 export interface ISite {
   id?: number
+  name?: string
   uri_pattern: string
   rules: IRule[]
 }
 
 export interface ISavedSite extends ISite {
   id: number
+  name: string
 }
 
 export interface ISites {
