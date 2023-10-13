@@ -18,7 +18,13 @@ import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
 import { guessSite, saveSite } from '~utils/api'
 import { highlight } from '~utils/highlight'
-import { buildSite, getRules, type ISite, type ISiteRule } from '~utils/site'
+import {
+  buildRule,
+  buildSite,
+  getRules,
+  type ISite,
+  type ISiteRule
+} from '~utils/site'
 
 const styleElement = document.createElement('style')
 
@@ -70,12 +76,12 @@ const Content = () => {
       uri_pattern: window.location.href
     })
   )
-  const [rule, setRule] = useState<ISiteRule>({
-    pattern: '',
-    fontColor: 'white',
-    backgroundColor: 'blue',
-    group: null
-  })
+  const [rule, setRule] = useState<ISiteRule>(
+    buildRule({
+      pattern: '',
+      group: null
+    })
+  )
   onSelection = async (event) => {
     const site = await guessSite(window.location.href)
     if (site) {
