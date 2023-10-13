@@ -75,7 +75,12 @@ describe('overwriteSite function', () => {
         id: '1',
         uri_pattern: 'http://example.com',
         rules: [
-          buildRule({ pattern: 'a', backgroundColor: '1', fontColor: '0000FF' })
+          buildRule({
+            id: '1',
+            pattern: 'a',
+            backgroundColor: '1',
+            fontColor: '0000FF'
+          })
         ],
         groups: []
       })
@@ -83,6 +88,7 @@ describe('overwriteSite function', () => {
         'http://example.com': buildSite({
           id: '1',
           uri_pattern: 'http://example.com',
+          rules: [],
           groups: []
         })
       }
@@ -93,6 +99,7 @@ describe('overwriteSite function', () => {
           uri_pattern: 'http://example.com',
           rules: [
             buildRule({
+              id: '1',
               pattern: 'a',
               backgroundColor: '1',
               fontColor: '0000FF'
