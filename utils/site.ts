@@ -61,7 +61,7 @@ export function overwriteSite(obj: ISite, sites: ISites) {
 export async function loadSites(storage: Storage) {
   const siteStr = (await storage.get('sites')) ?? '[]'
   let listSites: ISite[] = JSON.parse(siteStr)
-  listSites = listSites.map(buildSite<ISite>)
+  listSites = listSites.map(buildSite)
   return Object.fromEntries(
     new Map(listSites.map((site) => [site.uri_pattern, site]))
   )
@@ -109,7 +109,7 @@ export function buildGroup(options: Partial<IGroup>): IGroup {
   return Object.assign({}, defaultValue, options)
 }
 
-export function buildSite<T extends Partial<ISite>>(options: T): T & ISite {
+export function buildSite(options: Partial<ISite>): ISite {
   /**
    * initialize site objects with default attributes
    */
