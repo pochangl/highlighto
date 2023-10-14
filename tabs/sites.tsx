@@ -8,6 +8,8 @@ import '~assets/material-icons-font.css'
 
 import { Button, Grid, Icon } from '@mui/material'
 
+import { siteHref } from './site'
+
 const storage = new Storage({
   area: 'local'
 })
@@ -19,12 +21,6 @@ storage.watch({
 })
 
 let flush: () => Promise<void>
-
-function siteHref(site: ISite) {
-  const uri = new URL('./site.html', location.toString())
-  uri.searchParams.append('siteId', site.id)
-  return uri.toString()
-}
 
 function SitesEditor(options: {
   sites: ISites
@@ -44,7 +40,7 @@ function SitesEditor(options: {
             <Button onClick={() => options.onDelete(site)}>
               <Icon>delete</Icon>
             </Button>
-            <Button href={siteHref(site)}>
+            <Button href={siteHref({ id: site.id })}>
               <Icon>edit</Icon>
             </Button>
           </Grid>

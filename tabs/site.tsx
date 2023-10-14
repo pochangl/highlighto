@@ -7,6 +7,8 @@ import { buildRule, buildSite, retrieveSite, type ISite } from '~utils/site'
 
 import '~assets/material-icons-font.css'
 
+import { tabHref } from '~utils/tab'
+
 export type ISitePageArgument =
   | {
       id: string
@@ -33,6 +35,10 @@ storage.watch({
 })
 
 let flush: () => void
+
+export function siteHref(data: ISitePageArgument) {
+  return tabHref<ISitePageArgument>('./site.html', data)
+}
 
 function IndexNewtab() {
   const params: { id?: string; name?: string; uri_pattern?: string } =
