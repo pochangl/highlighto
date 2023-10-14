@@ -109,6 +109,7 @@ const Content = () => {
       },
       MuiSelect: {
         defaultProps: {
+          // @ts-ignore */
           container: shadowRoot.children['plasmo-shadow-container']
         }
       }
