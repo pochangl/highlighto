@@ -55,22 +55,6 @@ function RuleEditor({
           rule.pattern = event.target.value
         }}
       />
-      <TextField
-        defaultValue={rule.backgroundColor}
-        label="Background color"
-        style={style}
-        onChange={update((event) => {
-          rule.backgroundColor = event.target.value
-        })}
-      />
-      <TextField
-        defaultValue={rule.fontColor}
-        label="Font color"
-        style={style}
-        onChange={update((event) => {
-          rule.fontColor = event.target.value
-        })}
-      />
       <Select
         value={rule.group || ''}
         style={{ width: '100px' }}
@@ -92,6 +76,22 @@ function RuleEditor({
           </MenuItem>
         ))}
       </Select>
+      <TextField
+        defaultValue={rule.backgroundColor}
+        label="Background color"
+        style={style}
+        onChange={update((event) => {
+          rule.backgroundColor = event.target.value
+        })}
+      />
+      <TextField
+        defaultValue={rule.fontColor}
+        label="Font color"
+        style={style}
+        onChange={update((event) => {
+          rule.fontColor = event.target.value
+        })}
+      />
       <Grid item>
         <span
           style={{
