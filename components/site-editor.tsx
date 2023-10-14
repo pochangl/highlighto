@@ -270,8 +270,16 @@ export class SingleRuleEditor extends Component<
       <Card elevation={0}>
         <CardContent>
           <Grid container direction="column" rowGap={3}>
-            <div>uri pattern:</div>
             <TextField
+              label="name"
+              style={{ width: '60%' }}
+              defaultValue={this.props.site.name}
+              onChange={(event) => {
+                this.props.site.name = event.target.value
+              }}
+            />
+            <TextField
+              label="Uri pattern"
               style={{ width: '600px' }}
               defaultValue={this.props.site.uri_pattern}
               onChange={(event) =>

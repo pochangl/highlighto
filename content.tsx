@@ -73,7 +73,9 @@ const Content = () => {
   const [selected, setSelect] = useState(false)
   const [site, setSite] = useState<ISite>(
     buildSite({
-      uri_pattern: window.location.href
+      name: document.title,
+      uri_pattern: window.location.href,
+      rules: []
     })
   )
   const [rule, setRule] = useState<ISiteRule>(
