@@ -199,8 +199,8 @@ export class SiteEditor extends Component<
             this.props.site.name = event.target.value
           }}
         />
-        <p>uri pattern:</p>
         <TextField
+          label="Uri Pattern"
           style={{ width: '100%' }}
           defaultValue={this.props.site.uri_pattern}
           onChange={(event) =>
