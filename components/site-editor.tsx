@@ -37,6 +37,8 @@ function RuleEditor({
 }) {
   const update = useUpdater()
   const appliedRule = getRules(groups, [rule])[0]
+  const isGroupRule = groups.some((group) => group.id == rule.group)
+  const style = isGroupRule ? { opacity: 0.1 } : {}
   return (
     <Grid container columnGap={3}>
       <TextField
@@ -49,6 +51,7 @@ function RuleEditor({
       <TextField
         defaultValue={rule.backgroundColor}
         label="Background color"
+        style={style}
         onChange={update((event) => {
           rule.backgroundColor = event.target.value
         })}
@@ -56,6 +59,7 @@ function RuleEditor({
       <TextField
         defaultValue={rule.fontColor}
         label="Font color"
+        style={style}
         onChange={update((event) => {
           rule.fontColor = event.target.value
         })}
