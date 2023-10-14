@@ -12,7 +12,14 @@ import { Component, useState } from 'react'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
-import { buildRule, getRules, IGroup, ISiteRule, type ISite } from '~utils/site'
+import {
+  buildGroup,
+  buildRule,
+  getRules,
+  IGroup,
+  ISiteRule,
+  type ISite
+} from '~utils/site'
 
 function useUpdater() {
   const [version, setVersion] = useState(1)
@@ -74,7 +81,13 @@ function RuleEditor({
           <em>None</em>
         </MenuItem>
         {groups.map((group) => (
-          <MenuItem value={group.id} key={group.id}>
+          <MenuItem
+            value={group.id}
+            key={group.id}
+            style={{
+              backgroundColor: group.backgroundColor,
+              color: group.fontColor
+            }}>
             {group.name}
           </MenuItem>
         ))}
@@ -202,6 +215,20 @@ export class SiteEditor extends Component<
             onRemove={(r) => this.removeGroup(r)}
           />
         ))}
+        <Button
+          onClick={() => {
+            this.props.site.groups.push(
+              buildGroup({
+                name: '',
+                backgroundColor: 'blue',
+                fontColor: 'white'
+              })
+            )
+            this.setState({ version: this.state.version + 1 })
+          }}
+          variant="contained">
+          New Group
+        </Button>
         <p> rules: </p>
         {this.props.site.rules.map((rule, index) => (
           <RuleEditor
