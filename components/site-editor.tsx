@@ -9,7 +9,6 @@ import {
   TextField
 } from '@mui/material'
 import { Component, useState } from 'react'
-import { group } from 'console'
 
 import { saveSite } from '~utils/api'
 import type { IRule } from '~utils/highlight'
@@ -232,7 +231,7 @@ export class SiteEditor extends Component<
 
 /** simple rule editor for editing keyword in frontend */
 export class SingleRuleEditor extends Component<
-  { site: ISite; rule: IRule },
+  { site: ISite; rule: ISiteRule },
   { version: number }
 > {
   render() {
