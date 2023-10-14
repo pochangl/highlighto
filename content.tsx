@@ -16,6 +16,7 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
+import { ISitePageArgument } from '~tabs/site'
 import { guessSite, saveSite } from '~utils/api'
 import { highlight } from '~utils/highlight'
 import {
@@ -25,6 +26,7 @@ import {
   type ISite,
   type ISiteRule
 } from '~utils/site'
+import { gotoTab } from '~utils/tab'
 
 const styleElement = document.createElement('style')
 
@@ -71,6 +73,7 @@ let onSelection: (item: IMenuEvent) => void
 
 const Content = () => {
   const [selected, setSelect] = useState(false)
+  const [isNew, setIsNew] = useState(true)
   const [site, setSite] = useState<ISite>(
     buildSite({
       name: document.title,
@@ -88,6 +91,7 @@ const Content = () => {
     const site = await guessSite(window.location.href)
     if (site) {
       setSite(site)
+      setIsNew(false)
     }
     setRule({
       ...rule,
@@ -119,12 +123,28 @@ const Content = () => {
   return (
     <ThemeProvider theme={theme}>
       <CacheProvider value={styleCache}>
-        <Dialog open={selected} onClose={() => setSelect(false)}>
+        <Dialog open={selected} onClose={() => setSelect(false)} fullWidth>
           <DialogTitle> New Rule </DialogTitle>
           <DialogContent>
             <SingleRuleEditor site={site} rule={rule} key={rule.pattern} />
           </DialogContent>
           <DialogActions>
+            <Button
+              onClick={() => {
+                if (isNew) {
+                  gotoTab<ISitePageArgument>('site.html', {
+                    name: site.name,
+                    uri_pattern: site.uri_pattern,
+                    pattern: rule.pattern
+                  })
+                } else {
+                  gotoTab<ISitePageArgument>('site.html', {
+                    id: site.id
+                  })
+                }
+              }}>
+              More settings
+            </Button>
             <Button type="submit" onClick={() => setSelect(false)}>
               Cancel
             </Button>

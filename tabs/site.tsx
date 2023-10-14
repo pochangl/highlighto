@@ -14,6 +14,7 @@ export type ISitePageArgument =
   | {
       uri_pattern: string
       name: string
+      pattern?: string
     }
 
 function getParams<T>() {
@@ -39,7 +40,11 @@ function IndexNewtab() {
   const [site, setSite] = useState<ISite>(
     buildSite({
       uri_pattern: params.uri_pattern,
-      rules: [buildRule({})],
+      rules: [
+        buildRule({
+          pattern: params.uri_pattern
+        })
+      ],
       name: params.name
     })
   )
