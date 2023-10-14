@@ -16,8 +16,8 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
-import { ISitePageArgument } from '~tabs/site'
-import { guessSite, saveSite } from '~utils/api'
+import { ISitePageArgument, siteHref } from '~tabs/site'
+import { guessSite, openTab, saveSite } from '~utils/api'
 import { highlight } from '~utils/highlight'
 import {
   buildRule,
@@ -130,19 +130,18 @@ const Content = () => {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => {
-                if (isNew) {
-                  gotoTab<ISitePageArgument>('site.html', {
-                    name: site.name,
-                    uri_pattern: site.uri_pattern,
-                    pattern: rule.pattern
-                  })
-                } else {
-                  gotoTab<ISitePageArgument>('site.html', {
-                    id: site.id
-                  })
-                }
-              }}>
+              onClick={() =>
+                openTab<ISitePageArgument>(
+                  'site.html',
+                  isNew
+                    ? {
+                        name: site.name,
+                        uri_pattern: site.uri_pattern,
+                        pattern: rule.pattern
+                      }
+                    : { id: site.id }
+                )
+              }>
               More settings
             </Button>
             <Button type="submit" onClick={() => setSelect(false)}>

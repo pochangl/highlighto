@@ -5,6 +5,7 @@ import type {
   ISaveSiteRequest,
   ISiteResponseData
 } from '~background/messages/site'
+import type { ITabRequest } from '~background/messages/tab'
 
 import type { ISite } from './site'
 
@@ -25,6 +26,19 @@ export function saveSite(site: ISite) {
     body: {
       action: 'save',
       site
+    }
+  })
+}
+
+export function openTab<T extends { [key: string]: String }>(
+  path: string,
+  data: T
+) {
+  return sendToBackground<ITabRequest<T>>({
+    name: 'tab',
+    body: {
+      path,
+      data
     }
   })
 }
