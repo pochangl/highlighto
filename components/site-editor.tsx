@@ -2,8 +2,10 @@ import {
   Button,
   Card,
   CardContent,
+  FormControl,
   Grid,
   Icon,
+  InputLabel,
   MenuItem,
   Select,
   TextField
@@ -55,27 +57,31 @@ function RuleEditor({
           rule.pattern = event.target.value
         }}
       />
-      <Select
-        value={rule.group || ''}
-        style={{ width: '100px' }}
-        onChange={update((event) => {
-          rule.group = event.target.value || ''
-        })}>
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-        {groups.map((group) => (
-          <MenuItem
-            value={group.id}
-            key={group.id}
-            style={{
-              backgroundColor: group.backgroundColor,
-              color: group.fontColor
-            }}>
-            {group.name}
+      <FormControl>
+        <InputLabel>group</InputLabel>
+        <Select
+          label="group"
+          value={rule.group || ''}
+          style={{ width: '100px' }}
+          onChange={update((event) => {
+            rule.group = event.target.value || ''
+          })}>
+          <MenuItem value="">
+            <em>None</em>
           </MenuItem>
-        ))}
-      </Select>
+          {groups.map((group) => (
+            <MenuItem
+              value={group.id}
+              key={group.id}
+              style={{
+                backgroundColor: group.backgroundColor,
+                color: group.fontColor
+              }}>
+              {group.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <TextField
         defaultValue={rule.backgroundColor}
         label="Background color"
