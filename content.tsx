@@ -24,6 +24,7 @@ import {
   buildRule,
   buildSite,
   getRules,
+  retrieveSite,
   type ISite,
   type ISiteRule
 } from '~utils/site'
@@ -130,17 +131,22 @@ const Content = () => {
     completer.resolver() // start highlighting
   } catch {}
   async function onSave(rule: ISiteRule) {
-    site.rules.push(rule)
-    await saveSite(site)
+    const newSite = await guessSite(window.location.href)
+    newSite.rules = newSite.rules.filter((r) => r.id !== rule.id)
+    newSite.rules.push(rule)
+    await saveSite(newSite)
 
+    setSite(newSite)
     setSelect(false)
-    flushKeywords(site)
+    flushKeywords(newSite)
   }
   async function onDelete(rule: ISiteRule) {
-    site.rules = site.rules.filter((r) => rule.id !== r.id)
-    await saveSite(site)
+    const newSite = await guessSite(window.location.href)
+    newSite.rules = newSite.rules.filter((r) => rule.id !== r.id)
+    await saveSite(newSite)
+    setSite(newSite)
     setSelect(false)
-    flushKeywords(site)
+    flushKeywords(newSite)
   }
   const theme = createTheme({
     components: {
@@ -188,8 +194,7 @@ const Content = () => {
               More settings
             </Button>
             <Button onClick={() => onDelete(rule)} color="warning">
-              {' '}
-              Delete{' '}
+              Delete
             </Button>
             <Button onClick={() => setSelect(false)}>Cancel</Button>
             <Button variant="contained" onClick={() => onSave(rule)}>

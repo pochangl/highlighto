@@ -52,7 +52,7 @@ function RuleEditor({
     <Grid container columnGap={3}>
       <TextField
         defaultValue={rule.pattern}
-        label="Pattern"
+        label={`Pattern ${rule.id}`}
         onChange={(event) => {
           rule.pattern = event.target.value
         }}
@@ -135,7 +135,7 @@ function GroupEditor({
     <Grid container columnGap={3}>
       <TextField
         defaultValue={group.name}
-        label="name"
+        label={`name ${group.id}`}
         onChange={(event) => {
           group.name = event.target.value
         }}
@@ -243,7 +243,7 @@ export class SiteEditor extends Component<
           New Group
         </Button>
         <p> rules: </p>
-        {this.props.site.rules.map((rule, index) => (
+        {this.props.site.rules.sort((a, b) => a.id.localeCompare(b.id)).map((rule, index) => (
           <RuleEditor
             key={rule.pattern + index}
             rule={rule}
