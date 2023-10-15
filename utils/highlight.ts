@@ -21,8 +21,8 @@ export function highlight(options: { html: string; rules: IRule[] }) {
       options.rules.map((rule) => [
         rule.pattern.toLowerCase(),
         {
-          background: rule.backgroundColor,
-          color: rule.fontColor,
+          backgroundColor: rule.backgroundColor,
+          fontColor: rule.fontColor,
           title: rule.note
         }
       ])
@@ -34,9 +34,29 @@ export function highlight(options: { html: string; rules: IRule[] }) {
     // replace keywords
     text = text.replace(regex, function (matched) {
       const rule = map[matched.toLowerCase()]
-      return `<span class="_highlighto" style="background-color: ${escapeHtml(
-        rule.background
-      )}; color: ${escapeHtml(rule.color)}" title="${escapeHtml(rule.title)}">${escape(matched)}</span>`
+
+      const styles = [
+        ['background-color', 'backgroundColor'],
+        ['color', 'fontColor']
+      ]
+        .map(([attr, field]) => {
+          if (rule[field]) {
+            return `${attr}: ${escapeHtml(rule[field])}`
+          } else {
+            return ''
+          }
+        })
+        .join('; ')
+      const attributes = [['title', 'title']]
+        .map(([attr, field]) => {
+          if (rule[field]) {
+            return `${attr}="${escapeHtml(rule[field])}"`
+          } else {
+            return ''
+          }
+        })
+        .join(' ')
+      return `<span class="_highlighto" style="${styles}" ${attributes}>${escapeHtml(matched)}</span>`
     })
     return `>${text}<`
   })
