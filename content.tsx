@@ -163,7 +163,7 @@ const Content = () => {
           <DialogTitle> New Rule </DialogTitle>
           <DialogContent>
             <div
-              tabIndex="0"
+              tabIndex={0}
               onKeyDown={(event) => {
                 // prevent key event propagate to document
                 event.stopPropagation()
