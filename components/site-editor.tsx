@@ -110,7 +110,6 @@ function RuleEditor({
       <TextField
         defaultValue={rule.note}
         label="Note"
-        style={style}
         onChange={update((event) => {
           rule.note = event.target.value
         })}
