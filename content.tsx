@@ -119,10 +119,11 @@ const Content = () => {
       setSite(site)
       setIsNew(false)
     }
-    setRule({
-      ...rule,
-      pattern: event.selection
-    })
+    setRule(
+      buildRule({
+        pattern: event.selection
+      })
+    )
     setSelect(true)
   }
   try {
