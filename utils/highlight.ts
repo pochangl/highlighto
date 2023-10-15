@@ -46,8 +46,9 @@ export function highlight(options: { html: string; rules: IRule[] }) {
             return ''
           }
         })
+        .filter((a) => a)
         .join('; ')
-      const attributes = [['title', 'title']]
+      let attributes = [['title', 'title']]
         .map(([attr, field]) => {
           if (rule[field]) {
             return `${attr}="${escapeHtml(rule[field])}"`
@@ -55,8 +56,12 @@ export function highlight(options: { html: string; rules: IRule[] }) {
             return ''
           }
         })
+        .filter((a) => a)
         .join(' ')
-      return `<span class="_highlighto" style="${styles}" ${attributes}>${escapeHtml(matched)}</span>`
+      if (attributes) {
+        attributes = ' ' + attributes
+      }
+      return `<span class="_highlighto" style="${styles}"${attributes}>${escapeHtml(matched)}</span>`
     })
     return `>${text}<`
   })
