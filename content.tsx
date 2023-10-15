@@ -136,6 +136,12 @@ const Content = () => {
     setSelect(false)
     flushKeywords(site)
   }
+  async function onDelete(rule: ISiteRule) {
+    site.rules = site.rules.filter((r) => rule.id !== r.id)
+    await saveSite(site)
+    setSelect(false)
+    flushKeywords(site)
+  }
   const theme = createTheme({
     components: {
       MuiDialog: {
@@ -180,6 +186,10 @@ const Content = () => {
                 )
               }>
               More settings
+            </Button>
+            <Button onClick={() => onDelete(rule)} color="warning">
+              {' '}
+              Delete{' '}
             </Button>
             <Button onClick={() => setSelect(false)}>Cancel</Button>
             <Button variant="contained" onClick={() => onSave(rule)}>
