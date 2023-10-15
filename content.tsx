@@ -16,7 +16,7 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
-import { ISitePageArgument, siteHref } from '~tabs/site'
+import { ISitePageArgument} from '~tabs/site'
 import { guessSite, openTab, saveSite } from '~utils/api'
 import { highlight } from '~utils/highlight'
 import {
@@ -26,7 +26,6 @@ import {
   type ISite,
   type ISiteRule
 } from '~utils/site'
-import { gotoTab } from '~utils/tab'
 
 const styleElement = document.createElement('style')
 
