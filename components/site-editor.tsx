@@ -107,6 +107,14 @@ function RuleEditor({
           Example
         </span>
       </Grid>
+      <TextField
+        defaultValue={rule.note}
+        label="Note"
+        style={style}
+        onChange={update((event) => {
+          rule.note = event.target.value
+        })}
+      />
       {onRemove && (
         <Button onClick={() => onRemove(rule)}>
           <Icon> delete </Icon>

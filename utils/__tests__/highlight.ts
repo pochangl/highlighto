@@ -10,11 +10,16 @@ describe('highlight function', () => {
         highlight({
           html: input,
           rules: [
-            { pattern: 'a', backgroundColor: '#112233', fontColor: '#0000FF' }
+            {
+              pattern: 'a',
+              backgroundColor: '#112233',
+              fontColor: '#0000FF',
+              note: 't'
+            }
           ]
         })
       ).toEqual(
-        '<p><span class="_highlighto" style="background-color: #112233; color: #0000FF">a</span> b c</p>'
+        '<p><span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">a</span> b c</p>'
       )
     })
 
@@ -24,11 +29,16 @@ describe('highlight function', () => {
         highlight({
           html: input,
           rules: [
-            { pattern: 'b', backgroundColor: '#112233', fontColor: '#0000FF' }
+            {
+              pattern: 'b',
+              backgroundColor: '#112233',
+              fontColor: '#0000FF',
+              note: 't'
+            }
           ]
         })
       ).toEqual(
-        '<p>a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</p>'
+        '<p>a <span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">b</span> c</p>'
       )
     })
 
@@ -38,11 +48,16 @@ describe('highlight function', () => {
         highlight({
           html: input,
           rules: [
-            { pattern: 'c', backgroundColor: '#112233', fontColor: '#0000FF' }
+            {
+              pattern: 'c',
+              backgroundColor: '#112233',
+              fontColor: '#0000FF',
+              note: 't'
+            }
           ]
         })
       ).toEqual(
-        '<p>a b <span class="_highlighto" style="background-color: #112233; color: #0000FF">c</span></p>'
+        '<p>a b <span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">c</span></p>'
       )
     })
 
@@ -52,11 +67,16 @@ describe('highlight function', () => {
         highlight({
           html: input,
           rules: [
-            { pattern: 'b', backgroundColor: '#112233', fontColor: '#0000FF' }
+            {
+              pattern: 'b',
+              backgroundColor: '#112233',
+              fontColor: '#0000FF',
+              note: 't'
+            }
           ]
         })
       ).toEqual(
-        '<b>a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</b>'
+        '<b>a <span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">b</span> c</b>'
       )
     })
     test('prevent replace attribute', () => {
@@ -65,11 +85,16 @@ describe('highlight function', () => {
         highlight({
           html: input,
           rules: [
-            { pattern: 'b', backgroundColor: '#112233', fontColor: '#0000FF' }
+            {
+              pattern: 'b',
+              backgroundColor: '#112233',
+              fontColor: '#0000FF',
+              note: 't'
+            }
           ]
         })
       ).toEqual(
-        '<p b="b">a <span class="_highlighto" style="background-color: #112233; color: #0000FF">b</span> c</p>'
+        '<p b="b">a <span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">b</span> c</p>'
       )
     })
     test('case insensitive', () => {
@@ -81,12 +106,13 @@ describe('highlight function', () => {
             {
               pattern: 'Welcome',
               backgroundColor: '#112233',
-              fontColor: '#0000FF'
+              fontColor: '#0000FF',
+              note: 't'
             }
           ]
         })
       ).toEqual(
-        '<p><span class="_highlighto" style="background-color: #112233; color: #0000FF">welcome</span> <span class="_highlighto" style="background-color: #112233; color: #0000FF">Welcome</span></p>'
+        '<p><span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">welcome</span> <span class="_highlighto" style="background-color: #112233; color: #0000FF" title="t">Welcome</span></p>'
       )
     })
   })
@@ -96,12 +122,22 @@ describe('highlight function', () => {
       highlight({
         html: input,
         rules: [
-          { pattern: 'a', backgroundColor: '#112233', fontColor: '#1122FF' },
-          { pattern: 'b', backgroundColor: '#445566', fontColor: '#4455FF' }
+          {
+            pattern: 'a',
+            backgroundColor: '#112233',
+            fontColor: '#1122FF',
+            note: 't'
+          },
+          {
+            pattern: 'b',
+            backgroundColor: '#445566',
+            fontColor: '#4455FF',
+            note: 't2'
+          }
         ]
       })
     ).toEqual(
-      '<p><span class="_highlighto" style="background-color: #112233; color: #1122FF">a</span> <span class="_highlighto" style="background-color: #445566; color: #4455FF">b</span> c</p>'
+      '<p><span class="_highlighto" style="background-color: #112233; color: #1122FF" title="t">a</span> <span class="_highlighto" style="background-color: #445566; color: #4455FF" title="t2">b</span> c</p>'
     )
   })
 
@@ -114,14 +150,15 @@ describe('highlight function', () => {
           {
             pattern: 'options',
             backgroundColor: '#FF0000',
-            fontColor: '#0000FF'
+            fontColor: '#0000FF',
+            note: 't'
           }
         ]
       })
       // was
       // <p><a href=\"#<span class=\"_highlighto\" style=\"background-color: #FF0000; color: #0000FF\">options</span>\"><span class=\"_highlighto\" style=\"background-color: #FF0000; color: #0000FF\">options</span></a><p>
       expect(result).toEqual(
-        '<p><a href="#options"><span class="_highlighto" style="background-color: #FF0000; color: #0000FF">options</span></a><p>'
+        '<p><a href="#options"><span class="_highlighto" style="background-color: #FF0000; color: #0000FF" title="t">options</span></a><p>'
       )
     })
   })

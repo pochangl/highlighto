@@ -1,3 +1,5 @@
+import { escapeHtml } from './html'
+
 export interface IColorSetting {
   backgroundColor: string
   fontColor: string
@@ -5,6 +7,7 @@ export interface IColorSetting {
 
 export interface IRule extends IColorSetting {
   pattern: string
+  note: string // side note on highlighted item
 }
 
 export function highlight(options: { html: string; rules: IRule[] }) {
@@ -17,7 +20,11 @@ export function highlight(options: { html: string; rules: IRule[] }) {
     new Map(
       options.rules.map((rule) => [
         rule.pattern.toLowerCase(),
-        { background: rule.backgroundColor, color: rule.fontColor }
+        {
+          background: rule.backgroundColor,
+          color: rule.fontColor,
+          title: rule.note
+        }
       ])
     )
   )
@@ -26,8 +33,10 @@ export function highlight(options: { html: string; rules: IRule[] }) {
     let text = args1.at(-1).text
     // replace keywords
     text = text.replace(regex, function (matched) {
-      const color = map[matched.toLowerCase()]
-      return `<span class="_highlighto" style="background-color: ${color.background}; color: ${color.color}">${matched}</span>`
+      const rule = map[matched.toLowerCase()]
+      return `<span class="_highlighto" style="background-color: ${escapeHtml(
+        rule.background
+      )}; color: ${escapeHtml(rule.color)}" title="${escapeHtml(rule.title)}">${escape(matched)}</span>`
     })
     return `>${text}<`
   })

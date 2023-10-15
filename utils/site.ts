@@ -94,7 +94,8 @@ export function buildRule(options: Partial<ISiteRule>): ISiteRule {
     group: '',
     pattern: '',
     backgroundColor: 'blue',
-    fontColor: 'white'
+    fontColor: 'white',
+    note: ''
   }
   return Object.assign({}, defaultValue, options)
 }
