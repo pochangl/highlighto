@@ -16,8 +16,9 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
-import { ISitePageArgument, siteHref } from '~tabs/site'
+import type { ISitePageArgument } from '~tabs/site'
 import { guessSite, openTab, saveSite } from '~utils/api'
+import { createCompleter } from '~utils/async'
 import { highlight } from '~utils/highlight'
 import {
   buildRule,
@@ -26,7 +27,6 @@ import {
   type ISite,
   type ISiteRule
 } from '~utils/site'
-import { gotoTab } from '~utils/tab'
 
 const styleElement = document.createElement('style')
 
@@ -44,7 +44,7 @@ export const config: PlasmoCSConfig = {
 
 let cachedHtml: string
 
-function flushKeywords(site: ISite) {
+async function flushKeywords(site: ISite) {
   if (!cachedHtml) {
     cachedHtml = document.body.innerHTML
   }
@@ -52,10 +52,18 @@ function flushKeywords(site: ISite) {
     html: cachedHtml,
     rules: getRules(site.groups, site.rules)
   })
+
+  const doms: NodeListOf<HTMLElement> =
+    document.querySelectorAll('._highlighto')
+  for (let dom of doms) {
+    dom.onclick = onHighlightClick
+  }
 }
+let completer = createCompleter<void>()
 
 async function update() {
   const site = await guessSite(window.location.href)
+  await completer.promise // waiting all function setup properly ex. onHighlightedClick
   if (site !== null) {
     flushKeywords(site)
   }
@@ -70,6 +78,7 @@ chrome.runtime.onMessage.addListener(function (
 })
 
 let onSelection: (item: IMenuEvent) => void
+let onHighlightClick: (event: Event) => void
 
 const Content = () => {
   const [selected, setSelect] = useState(false)
@@ -87,6 +96,23 @@ const Content = () => {
       group: null
     })
   )
+
+  onHighlightClick = async function (event: Event) {
+    // find rule then edit rule
+    const guessedSite = await guessSite(window.location.href)
+    const keyword = (this as HTMLElement).innerText
+    const highlightedRule = guessedSite.rules.filter(
+      (rule) => rule.pattern.toLocaleLowerCase() === keyword.toLocaleLowerCase()
+    )[0]
+    if (highlightedRule) {
+      setSite(guessedSite)
+      setIsNew(false)
+      setRule(highlightedRule)
+      setSelect(true)
+    }
+
+    event.preventDefault()
+  }
   onSelection = async (event) => {
     const site = await guessSite(window.location.href)
     if (site) {
@@ -99,6 +125,9 @@ const Content = () => {
     })
     setSelect(true)
   }
+  try {
+    completer.resolver() // start highlighting
+  } catch {}
   async function onSave(rule: ISiteRule) {
     site.rules.push(rule)
     await saveSite(site)
