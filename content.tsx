@@ -119,10 +119,11 @@ const Content = () => {
       setSite(site)
       setIsNew(false)
     }
-    setRule({
-      ...rule,
-      pattern: event.selection
-    })
+    setRule(
+      buildRule({
+        pattern: event.selection
+      })
+    )
     setSelect(true)
   }
   try {
@@ -155,7 +156,14 @@ const Content = () => {
         <Dialog open={selected} onClose={() => setSelect(false)} fullWidth>
           <DialogTitle> New Rule </DialogTitle>
           <DialogContent>
-            <SingleRuleEditor site={site} rule={rule} key={rule.pattern} />
+            <div
+              tabIndex="0"
+              onKeyDown={(event) => {
+                // prevent key event propagate to document
+                event.stopPropagation()
+              }}>
+              <SingleRuleEditor site={site} rule={rule} key={rule.pattern} />
+            </div>
           </DialogContent>
           <DialogActions>
             <Button
@@ -173,13 +181,8 @@ const Content = () => {
               }>
               More settings
             </Button>
-            <Button type="submit" onClick={() => setSelect(false)}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              onClick={() => onSave(rule)}>
+            <Button onClick={() => setSelect(false)}>Cancel</Button>
+            <Button variant="contained" onClick={() => onSave(rule)}>
               Save
             </Button>
           </DialogActions>
