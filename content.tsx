@@ -16,7 +16,7 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 
 import type { IMenuEvent } from '~background/messages/site'
 import { SingleRuleEditor } from '~components/site-editor'
-import { ISitePageArgument} from '~tabs/site'
+import type { ISitePageArgument } from '~tabs/site'
 import { guessSite, openTab, saveSite } from '~utils/api'
 import { highlight } from '~utils/highlight'
 import {
