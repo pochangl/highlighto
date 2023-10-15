@@ -243,14 +243,16 @@ export class SiteEditor extends Component<
           New Group
         </Button>
         <p> rules: </p>
-        {this.props.site.rules.sort((a, b) => a.id.localeCompare(b.id)).map((rule, index) => (
-          <RuleEditor
-            key={rule.pattern + index}
-            rule={rule}
-            groups={this.props.site.groups}
-            onRemove={(r) => this.removeRule(r)}
-          />
-        ))}
+        {this.props.site.rules
+          .sort((a, b) => a.id.localeCompare(b.id))
+          .map((rule, index) => (
+            <RuleEditor
+              key={rule.pattern + index}
+              rule={rule}
+              groups={this.props.site.groups}
+              onRemove={(r) => this.removeRule(r)}
+            />
+          ))}
         <Button
           onClick={() => {
             this.props.site.rules.push(
