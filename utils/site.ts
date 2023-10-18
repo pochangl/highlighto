@@ -58,6 +58,16 @@ export function overwriteSite(obj: ISite, sites: ISites) {
   }
 }
 
+export function removeRule(rule: ISiteRule, rules: ISiteRule[]) {
+  return rules.filter((r) => rule.id !== r.id)
+}
+
+export function overwriteRule(rule: ISiteRule, rules: ISiteRule[]) {
+  rules = removeRule(rule, rules)
+  rules.push(rule)
+  return rules
+}
+
 export async function loadSites(storage: Storage) {
   const siteStr = (await storage.get('sites')) ?? '[]'
   let listSites: ISite[] = JSON.parse(siteStr)

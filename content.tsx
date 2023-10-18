@@ -24,6 +24,7 @@ import {
   buildRule,
   buildSite,
   getRules,
+  overwriteRule,
   retrieveSite,
   type ISite,
   type ISiteRule
@@ -132,8 +133,7 @@ const Content = () => {
   } catch {}
   async function onSave(rule: ISiteRule) {
     const newSite = await guessSite(window.location.href)
-    newSite.rules = newSite.rules.filter((r) => r.id !== rule.id)
-    newSite.rules.push(rule)
+    site.rules = overwriteRule(rule, newSite.rules)
     await saveSite(newSite)
 
     setSite(newSite)

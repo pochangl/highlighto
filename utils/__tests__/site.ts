@@ -6,7 +6,9 @@ import {
   buildSite,
   findSite,
   getRules,
-  overwriteSite
+  overwriteRule,
+  overwriteSite,
+  removeRule
 } from '~utils/site'
 
 describe('findSites', () => {
@@ -260,5 +262,79 @@ describe('overwriteSite function', () => {
 
       expect(rules).toEqual([Object.assign({}, rule, { fontColor: 'red' })])
     })
+  })
+})
+
+describe('overwriteRule function', () => {
+  test('test rewrite', () => {
+    const oldRule = buildRule({
+      id: '1',
+      note: 'old'
+    })
+    const newRule = buildRule({
+      id: '1'
+    })
+    expect(newRule).not.toEqual(oldRule)
+    expect(overwriteRule(newRule, [oldRule])).toEqual([newRule])
+  })
+  test('test rewrite 2', () => {
+    // multiple rules
+    const oldRule1 = buildRule({
+      id: '1',
+      note: 'old'
+    })
+    const oldRule2 = buildRule({
+      id: '2',
+      note: 'old'
+    })
+    const newRule1 = buildRule({
+      id: '1'
+    })
+    const newRule2 = buildRule({
+      id: '2'
+    })
+    expect(newRule1).not.toEqual(oldRule2)
+    expect(newRule1).not.toEqual(oldRule2)
+
+    expect(overwriteRule(newRule1, [oldRule1, oldRule2])).toEqual([
+      oldRule2,
+      newRule1
+    ])
+    expect(overwriteRule(newRule2, [oldRule1, oldRule2])).toEqual([
+      oldRule1,
+      newRule2
+    ])
+  })
+})
+
+describe('removeRule function', () => {
+  test('test remove', () => {
+    const oldRule = buildRule({
+      id: '1',
+      note: 'old'
+    })
+    const newRule = buildRule({
+      id: '1'
+    })
+    expect(removeRule(newRule, [oldRule])).not.toEqual(oldRule)
+  })
+  test('test rewrite 2', () => {
+    // multiple rules
+    const oldRule1 = buildRule({
+      id: '1',
+      note: 'old'
+    })
+    const oldRule2 = buildRule({
+      id: '2',
+      note: 'old'
+    })
+    const removedRule1 = buildRule({
+      id: '1'
+    })
+    const removedRule2 = buildRule({
+      id: '2'
+    })
+    expect(removeRule(removedRule1, [oldRule1, oldRule2])).toEqual([oldRule2])
+    expect(removeRule(removedRule2, [oldRule1, oldRule2])).toEqual([oldRule1])
   })
 })
